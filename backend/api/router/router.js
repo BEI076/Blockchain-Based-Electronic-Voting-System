@@ -67,7 +67,7 @@ router.get("/get-full-candidate", adminCheckToken, getFullCandidate);
 
 // router for voter
 
-router.post("/create-voter",userCheckToken, createVoter);
+router.post("/create-voter",createVoter);
 router.get("/get-voter", adminCheckToken, userCheckToken, getVoter);
 router.get("/get-voter-by-id/:id", getVoterById);
 router.delete("/delete-voter",adminCheckToken, deleteVoter);

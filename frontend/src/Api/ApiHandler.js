@@ -205,8 +205,7 @@ export const createVoter = async (
   email,
   citizenshipid,
   dob,
-  password,
-  token
+  password
 ) => {
   return await axios({
     method: "POST",
@@ -218,9 +217,6 @@ export const createVoter = async (
       citizenshipid: citizenshipid,
       dob: dob,
       password: password,
-    },
-    headers: {
-      Authorization: `Bearer ${token}`,
     },
   }).then((response) => {
     return response.data;

@@ -16,7 +16,7 @@ const Register = (props) => {
   const register = (e) => {
     e.preventDefault();
 
-    createVoter(name, address, email, citizenshipId, dob, password, token).then(
+    createVoter(name, address, email, citizenshipId, dob, password).then(
       (response) => {
         setAlert(response.message);
       }

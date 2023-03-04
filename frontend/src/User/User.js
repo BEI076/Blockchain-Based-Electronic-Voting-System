@@ -21,8 +21,8 @@ const User = () => {
     setToken(token);
     setVoterData(voterData);
     setIsLoggedin(state);
-    sessionStorage.setItem("isLoggedin", JSON.stringify(state));
-    sessionStorage.setItem("token", token);
+    sessionStorage.setItem("isLoggedinUser", JSON.stringify(state));
+    sessionStorage.setItem("userToken", token);
   };
 
   // loggedin State Handler Function
@@ -35,8 +35,8 @@ const User = () => {
   // };
 
   useEffect(() => {
-    const storedIsLoggedin = sessionStorage.getItem("isLoggedin");
-    const storedToken = sessionStorage.getItem("token");
+    const storedIsLoggedin = sessionStorage.getItem("isLoggedinUser");
+    const storedToken = sessionStorage.getItem("userToken");
     if (storedIsLoggedin && storedToken) {
       setIsLoggedin(JSON.parse(storedIsLoggedin));
       setToken(storedToken);
