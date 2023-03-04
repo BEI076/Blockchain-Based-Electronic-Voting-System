@@ -13,6 +13,11 @@ const Login = (props) => {
       // console.log("response data")
       // console.log(response.token);
       // console.log(`token = ${response.token}`)
+      sessionStorage.setItem("voterInfo", JSON.stringify(response.voter_data));
+      // sessionStorage.setItem("voterInfo",response.voter_data);
+
+
+
       setAlert(response.message);
       setEmail("");
       setPassword("");

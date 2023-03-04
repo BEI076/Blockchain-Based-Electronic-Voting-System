@@ -1,18 +1,21 @@
 import { useState, useEffect } from "react";
-import { getCategory, getFullCandidate } from "../../Api/ApiHandler";
+import { getCategory } from "../../Api/ApiHandler";
+import CategorySelection from "./CategorySelection";
 const Vote = (props) => {
   const token = props.token;
   // console.log(`token = ${token}`);
-  const data = props.data;
+
+  const voterInfo = JSON.parse(sessionStorage.getItem("voterInfo"));
+  // console.log(` voterInfo= ${voterInfo}`);
 
   // defining sates
   const [voterId, setVoterId] = useState("");
   const [alert, setAlert] = useState("");
   const [categoryData, setCategoryData] = useState([]);
   const [candidateData, setCandidateData] = useState([]);
-
   const [category, setCategory] = useState("");
   const [candidate, setCandidate] = useState("");
+  const [filterVoteData, setfilterVoteData] = useState([]);
 
   //logout function
   const logout = (e) => {
@@ -21,19 +24,26 @@ const Vote = (props) => {
     props.loginState(false);
   };
 
-  // fetching category and party details
+  // fetching category
   useEffect(() => {
     getCategory(token).then((response) => {
       setCategoryData(response.data);
-      // console.log("category data");
-      // console.log(response.data);
-    });
-    getFullCandidate(token).then((response) => {
-      setCandidateData(response.data);
-      // console.log("candidate data");
-      // console.log(response.data);
+      // console.log(response.data)
     });
   }, [token]);
+
+  // vote data filter function
+  const filterVoteDataHandler = (data) => {
+    const newFilteredData = filterVoteData.filter((item) => {
+      if (item.category_name !== data.category_name) {
+        // console.log(`item = ${item}`)
+        return item;
+      } else return null;
+    });
+    setfilterVoteData([...newFilteredData, data]);
+  };
+
+  console.log(filterVoteData);
 
   // vote handler function
   const voteHandler = (e) => {
@@ -46,11 +56,11 @@ const Vote = (props) => {
     <div class="vote-container">
       <div class="voter-info-container">
         <span class="head">Voter Information</span>
-        <span class="name">Name = {data.name}</span>
-        <span class="address">Address = {data.address}</span>
-        <span class="email">Email = {data.email}</span>
-        <span class="email">DOB = {data.dob}</span>
-        <span class="voter-id">Voter Id = {data.voter_id}</span>
+        <span class="name">Name = {voterInfo.name}</span>
+        <span class="address">Address = {voterInfo.address}</span>
+        <span class="email">Email = {voterInfo.email}</span>
+        <span class="email">DOB = {voterInfo.dob.substring(0,10)}</span>
+        <span class="voter-id">Voter Id = {voterInfo.voter_id}</span>
       </div>
 
       <button onClickCapture={logout} type="submit">
@@ -63,21 +73,12 @@ const Vote = (props) => {
           <div class="form-item-container">
             {categoryData.map((item) => {
               return (
-                <div class="form-item">
-                  <label for="category">{item.name}:</label>
-                  <select name="category" id="category">
-                    <option value="null" hidden selected>
-                      Choose your candidate
-                    </option>
-                    {candidateData.map((data) => {
-                      if (item.name === data.category_name) {
-                        return <option value="President">{data.name}</option>;
-                      } else {
-                        return null;
-                      }
-                    })}
-                  </select>
-                </div>
+                <CategorySelection
+                  key={item.c_id}
+                  item={item}
+                  token={token}
+                  filterVoteData={filterVoteDataHandler}
+                />
               );
             })}
           </div>

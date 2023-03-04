@@ -1,5 +1,5 @@
 const sha256 = require("sha256"); //importing sha256 hashing
-const currentNodeUrl = process.argv[3];
+const currentNodeUrl = process.argv[1];
 const { v4: uuidv4 } = require("uuid");
 
 // defining blockcahin structure

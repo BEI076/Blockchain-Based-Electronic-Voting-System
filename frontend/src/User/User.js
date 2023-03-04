@@ -9,7 +9,6 @@ const User = () => {
   const [isLoggedin, setIsLoggedin] = useState(false);
   const [activeTab, setActiveTab] = useState("login");
   const [token, setToken] = useState("");
-  const [voterData, setVoterData] = useState("");
 
   //   tab function
   const showForm = (formName) => {
@@ -19,7 +18,6 @@ const User = () => {
   // loggedin State Handler Function
   const loginStateHandler = (state, token, voterData) => {
     setToken(token);
-    setVoterData(voterData);
     setIsLoggedin(state);
     sessionStorage.setItem("isLoggedinUser", JSON.stringify(state));
     sessionStorage.setItem("userToken", token);
@@ -88,7 +86,7 @@ const User = () => {
           </div>
         </div>
       ) : (
-        <Vote token={token} data={voterData} loginState={loginStateHandler} />
+        <Vote token={token}  loginState={loginStateHandler} />
       )}
     </>
   );

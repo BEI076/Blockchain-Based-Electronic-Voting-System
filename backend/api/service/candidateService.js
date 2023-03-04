@@ -56,7 +56,7 @@ module.exports = {
   },
   getFullCandidate: (callBack = () => {}) => {
     pool.query(
-      `SELECT Candidate.ca_id, Candidate.name, Candidate.address,candidate.citizenshipid, candidate.dob, Category.name AS category_name, Party.name AS party_name
+      `SELECT Candidate.ca_id,Candidate.candidate_address, Candidate.name, Candidate.address,candidate.citizenshipid, candidate.dob, Category.name AS category_name, Party.name AS party_name
       FROM Candidate
       JOIN Category ON Candidate.c_id = Category.c_id
       JOIN Party ON Candidate.p_id = Party.p_id`,
