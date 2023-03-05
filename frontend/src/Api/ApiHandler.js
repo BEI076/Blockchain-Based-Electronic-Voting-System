@@ -229,6 +229,7 @@ export const getVoter = async (token) => {
     method: "GET",
     url: baseurl + "/get-voter",
     responseType: "json",
+
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -238,15 +239,19 @@ export const getVoter = async (token) => {
 };
 //get voter by voter id
 
-export const getVoterByVoterId = async (token) => {
+export const getVoterByVoterId = async (voter_id, token) => {
   return await axios({
     method: "GET",
     url: baseurl + "/get-voter-by-voter-id",
     responseType: "json",
+    data: {
+      voter_id: voter_id,
+    },
     headers: {
       Authorization: `Bearer ${token}`,
     },
   }).then((response) => {
+    console.log(response.data);
     return response.data;
   });
 };

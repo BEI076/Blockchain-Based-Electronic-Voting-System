@@ -73,7 +73,7 @@ router.get("/get-voter", adminCheckToken, userCheckToken, getVoter);
 router.get("/get-voter-by-id/:id", getVoterById);
 router.delete("/delete-voter", adminCheckToken, deleteVoter);
 router.post("/update-voter", adminCheckToken, userCheckToken, updateVoterById);
-router.get("get-voter-by-voter-id", userCheckToken, getVoterByVoterID);
+router.get("/get-voter-by-voter-id", userCheckToken, getVoterByVoterID);
 
 //router for vote
 router.post("/create-vote", CreateVote);

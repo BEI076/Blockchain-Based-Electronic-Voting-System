@@ -69,7 +69,7 @@ module.exports = {
       return callBack(null, results);
     });
   },
-  getVoterByVoterID: (callBack = (data) => {}) => {
+  getVoterByVoterID: (data, callBack = () => {}) => {
     pool.query(
       `SELECT * FROM voter where voter_id = ?`,
       [data.voter_id],

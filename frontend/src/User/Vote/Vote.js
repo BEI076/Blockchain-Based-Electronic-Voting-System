@@ -18,6 +18,7 @@ const Vote = (props) => {
   const logout = (e) => {
     e.preventDefault();
     setVoterId("");
+    sessionStorage.clear();
     props.loginState(false);
   };
 
@@ -40,18 +41,21 @@ const Vote = (props) => {
     setfilterVoteData([...newFilteredData, data]);
   };
 
-  console.log(filterVoteData);
+  // console.log(filterVoteData);
 
   // voter id handler
-  const voterIdHandler = (e) => {
-    setVoterId(e.target.value);
-  };
 
   // vote handler function
   const voteHandler = (e) => {
     e.preventDefault();
-    // props.loginState(true);
-    setVoterId("");
+    const transaction = [];
+    filterVoteData.map((item) => {
+      transaction.push({
+        ...item,
+        voter_address: voterInfo.voter_address,
+      });
+    });
+    console.log(transaction);
   };
 
   return (
@@ -91,8 +95,8 @@ const Vote = (props) => {
             id="voter-id"
             name="voter-id"
             placeholder="Enter your voter id"
-            onChange={voterIdHandler}
-            value={voterId}
+            value={voterInfo.voter_id}
+            disabled
             required
           />
           <button type="submit">Cast your vote</button>
