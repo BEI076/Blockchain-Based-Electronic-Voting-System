@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { getCategory, getVoterByVoterId } from "../../Api/ApiHandler";
 import CategorySelection from "./CategorySelection";
+import { transactionBraodcast } from "../../Api/ApiHandler";
 const Vote = (props) => {
   const token = props.token;
   // console.log(`token = ${token}`);
@@ -55,7 +56,9 @@ const Vote = (props) => {
         voter_address: voterInfo.voter_address,
       });
     });
-    console.log(transaction);
+    transactionBraodcast(transaction, token).then((response) => {
+      console.log(response);
+    });
   };
 
   return (

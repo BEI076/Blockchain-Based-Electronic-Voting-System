@@ -6,21 +6,31 @@ const blockchainRouter = require("./dev/router");
 app.use(express.json());
 const cors = require("cors");
 
+app.use(
+  cors({
+    origin: "http://192.168.1.120:3000",
+  })
+);
+
 // app.use((req, res, next) => {
 //   res.setHeader('Access-Control-Allow-Origin', 'http://192.168.1.120:3000');
 //   next();
 // });
 
-app.use(
-  cors({
-    origin: "http://localhost:3000",
-  })
-);
+// app.use(function (req, res, next) {
+//   res.header("Access-Control-Allow-Origin", "http://192.168.1.120:3000");
+//   res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+//   res.header(
+//     "Access-Control-Allow-Headers",
+//     "Origin, X-Requested-With, Content-Type, Accept"
+//   );
+//   next();
+// });
 
 const port = process.argv[2];
 
-const SynchronizeNodes = require("./config/synchronizeNodes");
-const node = new SynchronizeNodes();
+// const SynchronizeNodes = require("./config/synchronizeNodes");
+// const node = new SynchronizeNodes();
 
 // app.use("/", router);
 app.use("/", router, blockchainRouter);

@@ -8,6 +8,7 @@ var app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
+const { getFullCandidate } = require("../api/service/candidateService");
 //creating blockchain endpoint
 
 module.exports = {
@@ -27,15 +28,17 @@ module.exports = {
 
   // broadcast transaction to all over the network
   transactionBroadcast: (data, callBack = () => {}) => {
+    const trasactionArray = data.transaction;
     const requestPromises = [];
-    data.forEach((item) => {
+    trasactionArray.forEach((item) => {
       // console.log("-------------------------");
       // console.log(item);
       const newTransaction = coin.createNewTransaction(
         item.name, // name
-        item.category, // category
-        item.c_id, // candidate (unique address)
-        item.v_id // voter (unique address)
+        item.candidate_address, // candidate unique address
+        item.voter_address, // voter (unique address)
+        item.party_name, // party name
+        item.category_name // category name
       );
       coin.addTransactionToPendingTransactions(newTransaction);
 
@@ -231,40 +234,32 @@ module.exports = {
       }
     });
   },
-
   // count total votes of each candidte
   countVote: async (callBack = () => {}) => {
-    // implmementing consensus algorithm
-    const nodeConsensus = {
-      uri: coin.currentNodeUrl + "/consensus",
-      method: "get",
-      json: true,
-    };
-    const nodeConsensusResponse = rp(nodeConsensus);
-    Promise.resolve(nodeConsensusResponse).then((response) => {
-      console.log(response);
-      //
-    });
 
     const voteObject = [];
-    //fetching candidates
-    let candidates = [];
-    const candidateRequestOption = {
-      uri: coin.currentNodeUrl + "/get-candidate",
-      method: "GET",
-      json: true,
-    };
-    const candidatePromise = rp(candidateRequestOption);
-    await Promise.resolve(candidatePromise).then((data) => {
-      candidates.push(...data.data);
-    });
+    getFullCandidate((error, results) => {
+      if (error) {
+        return null;
+      } else {
+        const candidates = results;
+        candidates.forEach((candidate) => {
+          // console.log(candidate.party_name);
+          // console.log(candidate.name);
 
-    candidates.forEach((candidate) => {
-      voteObject.push(
-        coin.voteCount(candidate.name, candidate.c_id, candidate.category)
-      );
+          voteObject.push(
+            coin.voteCount(
+              candidate.name,
+              candidate.candidate_address,
+              candidate.category_name,
+              candidate.party_name
+            )
+          );
+        });
+        // console.log(voteObject);
+        return callBack(null, voteObject);
+      }
     });
-    // console.log(voteObject);
-    return callBack(null, voteObject);
   },
 };
+

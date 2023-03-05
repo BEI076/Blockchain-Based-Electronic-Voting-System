@@ -1,5 +1,5 @@
 import axios from "axios";
-const baseurl = "http://localhost:3001";
+const baseurl = "http://192.168.1.120:3001";
 
 // admin login
 export const adminLogin = async (username, password) => {
@@ -282,6 +282,22 @@ export const userLogin = async (email, password) => {
     },
   }).then((response) => {
     // console.log(response.data);
+    return response.data;
+  });
+};
+
+// transacation broadcast
+export const transactionBraodcast = async (transaction, token) => {
+  return await axios({
+    method: "POST",
+    url: baseurl + "/transaction-broadcast",
+    data: {
+      transaction: transaction,
+    },
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }).then((response) => {
     return response.data;
   });
 };

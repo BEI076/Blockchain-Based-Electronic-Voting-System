@@ -15,7 +15,7 @@ const {
 const { checkToken } = require("../auth/tokenValidation");
 
 
-router.get("/blockchain",checkToken, getBlockchain);
+router.get("/blockchain",getBlockchain);
 router.post("/transaction", transaction);
 router.post("/transaction-broadcast", transactionBroadcast);
 router.get("/mine", mine);

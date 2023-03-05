@@ -1,5 +1,5 @@
 const sha256 = require("sha256"); //importing sha256 hashing
-const currentNodeUrl = process.argv[1];
+const currentNodeUrl = process.argv[3];
 const { v4: uuidv4 } = require("uuid");
 
 // defining blockcahin structure
@@ -30,33 +30,34 @@ Blockchain.prototype.createNewBlock = function (
   return newBlock;
 };
 
-
-// returns last block 
+// returns last block
 Blockchain.prototype.getLastBlock = function () {
   return this.chain[this.chain.length - 1];
 };
 
 // create a transaction
 Blockchain.prototype.createNewTransaction = function (
-  name,
-  category,
-  candidate,
-  voter
+  name, // name
+  candidate_address, // candidate unique address
+  voter_address, // voter (unique address)
+  party_name, // party name
+  category_name
 ) {
   const transactionId = uuidv4().split("-").join("");
   const newTransaction = {
     amount: 1,
     name: name,
-    category: category,
-    candidate: candidate,
-    voter: voter,
+    category_name: category_name,
+    candidate_address: candidate_address,
+    voter_address: voter_address,
+    party_name: party_name,
     transactionId: transactionId,
   };
   // console.log(transactionId);
   return newTransaction;
 };
 
-// push transaction into pendingTransactions 
+// push transaction into pendingTransactions
 Blockchain.prototype.addTransactionToPendingTransactions = function (
   transactionObj
 ) {
@@ -131,32 +132,36 @@ Blockchain.prototype.chainIsValid = function (blockchain) {
 // vote count
 Blockchain.prototype.voteCount = function (
   candidateName,
-  candidateCid,
-  candidateCategory
+  candidate_address,
+  category_name,
+  party_name
 ) {
   const chain = this.chain;
   let votes = 0;
   let candidate = null;
   let name = null;
   let category = null;
+  let party = null;
   // return chain;
   chain.forEach((block) => {
     const transactions = block.transactions;
     // console.log(transactions);
     transactions.forEach((transaction) => {
-      candidate = candidateCid;
+      candidate = candidate_address;
       name = candidateName;
-      category = candidateCategory;
-      if (candidateCid === transaction.candidate) {
+      party = party_name;
+      category = category_name;
+      if (candidate_address === transaction.candidate_address) {
         votes = votes + transaction.amount;
       }
     });
   });
   return {
     votes: votes,
-    name: name,
-    candidate: candidate,
-    category: category,
+    candidate_name: name,
+    candidate_address: candidate,
+    category_name: category,
+    party_name: party,
   };
 };
 
