@@ -8,7 +8,7 @@ const Result = (props) => {
   const [categoryData, setCategoryData] = useState([]);
   useEffect(() => {
     getVote(token).then((response) => {
-    //   console.log(response.data);
+      //   console.log(response.data);
       setVoteData([...response.data]);
 
       getCategory(token).then((response) => {
@@ -36,9 +36,9 @@ const Result = (props) => {
               </thead>
               <tbody>
                 {voteData.map((data) => {
-                  if (item.name == data.category_name) {
+                  if (item.name === data.category_name) {
                     return <VoteResultComponent key={data.r_id} item={data} />;
-                  }
+                  } else return null;
                 })}
               </tbody>
             </table>

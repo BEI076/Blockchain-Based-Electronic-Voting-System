@@ -2,7 +2,6 @@ const bodyParser = require("body-parser");
 const Blockchain = require("./blockchain");
 const coin = new Blockchain();
 const rp = require("request-promise");
-const { response } = require("express");
 var express = require("express");
 var app = express();
 app.use(bodyParser.json());
@@ -237,6 +236,20 @@ module.exports = {
   },
   // count total votes of each candidte
   countVote: async (callBack = () => {}) => {
+
+        // implmementing consensus algorithm
+        const nodeConsensus = {
+          uri: coin.currentNodeUrl + "/consensus",
+          method: "get",
+          json: true,
+        };
+        const nodeConsensusResponse = rp(nodeConsensus);
+        Promise.resolve(nodeConsensusResponse).then((response) => {
+          console.log(response);
+          //
+        });
+        
+        //count votes
     const voteObject = [];
     getFullCandidate((error, results) => {
       if (error) {
@@ -254,7 +267,6 @@ module.exports = {
             candidate.party_name
           );
           CreateVote(vote);
-          
 
           voteObject.push(
             coin.voteCount(
