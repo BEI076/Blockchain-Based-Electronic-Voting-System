@@ -236,7 +236,20 @@ export const getVoter = async (token) => {
     return response.data;
   });
 };
+//get voter by voter id
 
+export const getVoterByVoterId = async (token) => {
+  return await axios({
+    method: "GET",
+    url: baseurl + "/get-voter-by-voter-id",
+    responseType: "json",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }).then((response) => {
+    return response.data;
+  });
+};
 // delete voter
 export const deleteVoter = async (v_id, token) => {
   return await axios({

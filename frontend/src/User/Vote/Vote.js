@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { getCategory } from "../../Api/ApiHandler";
+import { getCategory, getVoterByVoterId } from "../../Api/ApiHandler";
 import CategorySelection from "./CategorySelection";
 const Vote = (props) => {
   const token = props.token;
@@ -12,9 +12,6 @@ const Vote = (props) => {
   const [voterId, setVoterId] = useState("");
   const [alert, setAlert] = useState("");
   const [categoryData, setCategoryData] = useState([]);
-  const [candidateData, setCandidateData] = useState([]);
-  const [category, setCategory] = useState("");
-  const [candidate, setCandidate] = useState("");
   const [filterVoteData, setfilterVoteData] = useState([]);
 
   //logout function
@@ -45,6 +42,11 @@ const Vote = (props) => {
 
   console.log(filterVoteData);
 
+  // voter id handler
+  const voterIdHandler = (e) => {
+    setVoterId(e.target.value);
+  };
+
   // vote handler function
   const voteHandler = (e) => {
     e.preventDefault();
@@ -59,7 +61,7 @@ const Vote = (props) => {
         <span class="name">Name = {voterInfo.name}</span>
         <span class="address">Address = {voterInfo.address}</span>
         <span class="email">Email = {voterInfo.email}</span>
-        <span class="email">DOB = {voterInfo.dob.substring(0,10)}</span>
+        <span class="email">DOB = {voterInfo.dob.substring(0, 10)}</span>
         <span class="voter-id">Voter Id = {voterInfo.voter_id}</span>
       </div>
 
@@ -89,7 +91,7 @@ const Vote = (props) => {
             id="voter-id"
             name="voter-id"
             placeholder="Enter your voter id"
-            onChange={(e) => setVoterId(e.target.value)}
+            onChange={voterIdHandler}
             value={voterId}
             required
           />

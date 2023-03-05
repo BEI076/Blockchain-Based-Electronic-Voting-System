@@ -6,6 +6,7 @@ const {
   getVoter,
   deleteVoter,
   updateVoterById,
+  getVoterByVoterID,
 } = require("../service/voterService");
 
 module.exports = {
@@ -49,6 +50,21 @@ module.exports = {
   getVoterById: (req, res) => {
     const id = req.params.id;
     getVoterById(id, (error, results) => {
+      if (error) {
+        console.log(error);
+        return res.status(500).json({
+          success: 0,
+          message: "Database connection failed",
+        });
+      }
+      return res.status(200).json({
+        success: 1,
+        data: results,
+      });
+    });
+  },
+  getVoterByVoterID: (req, res) => {
+    getVoterByVoterID(req.body, (error, results) => {
       if (error) {
         console.log(error);
         return res.status(500).json({

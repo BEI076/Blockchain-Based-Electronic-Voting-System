@@ -69,6 +69,18 @@ module.exports = {
       return callBack(null, results);
     });
   },
+  getVoterByVoterID: (callBack = (data) => {}) => {
+    pool.query(
+      `SELECT * FROM voter where voter_id = ?`,
+      [data.voter_id],
+      (error, results, fields) => {
+        if (error) {
+          callBack(error);
+        }
+        return callBack(null, results);
+      }
+    );
+  },
   deleteVoter: (data, callBack) => {
     pool.query(
       `DELETE FROM voter WHERE v_id = ?`,
