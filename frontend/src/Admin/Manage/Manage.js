@@ -12,9 +12,15 @@ const Manage = (props) => {
   };
 
   const publish = (e) => {
+    deleteVote(token).then((response) => {
+      // console.log("votes cleared");
+      sessionStorage.setItem("refreshData", Math.random());
+    });
     countVote(token).then((response) => {
       // console.log(response.data);
       sessionStorage.setItem("refreshData", Math.random());
+      console.log("Votes Published");
+
     });
   };
 
