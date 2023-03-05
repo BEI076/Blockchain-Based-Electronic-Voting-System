@@ -9,6 +9,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 const { getFullCandidate } = require("../api/service/candidateService");
+const { CreateVote } = require("../api/service/voteService");
 //creating blockchain endpoint
 
 module.exports = {
@@ -236,7 +237,6 @@ module.exports = {
   },
   // count total votes of each candidte
   countVote: async (callBack = () => {}) => {
-
     const voteObject = [];
     getFullCandidate((error, results) => {
       if (error) {
@@ -246,6 +246,15 @@ module.exports = {
         candidates.forEach((candidate) => {
           // console.log(candidate.party_name);
           // console.log(candidate.name);
+
+          const vote = coin.voteCount(
+            candidate.name,
+            candidate.candidate_address,
+            candidate.category_name,
+            candidate.party_name
+          );
+          CreateVote(vote);
+          
 
           voteObject.push(
             coin.voteCount(
@@ -262,4 +271,3 @@ module.exports = {
     });
   },
 };
-

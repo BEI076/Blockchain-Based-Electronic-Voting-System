@@ -57,8 +57,10 @@ const Vote = (props) => {
       });
     });
     transactionBraodcast(transaction, token).then((response) => {
+
       console.log(response);
     });
+    setAlert("You Have Successfully Voted")
   };
 
   return (
@@ -104,7 +106,7 @@ const Vote = (props) => {
           />
           <button type="submit">Cast your vote</button>
         </form>
-        <div class="alert">You Have Successfully Voted</div>
+        <div class="alert" > {alert} </div>
       </div>
     </div>
   );

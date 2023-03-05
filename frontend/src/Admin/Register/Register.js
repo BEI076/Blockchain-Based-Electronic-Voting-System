@@ -25,7 +25,7 @@ const Register = (props) => {
             className={`tab ${activeTab === "party" ? "active" : ""}`}
             onClick={() => showForm("party")}
           >
-            Party
+            Add Party
           </button>
           {/* category */}
           <button
@@ -47,7 +47,6 @@ const Register = (props) => {
           id="party-form"
           className={`form-content ${activeTab === "party" ? "active" : ""}`}
         >
-          <h2>Add Party</h2>
           <RegisterParty token={token} />
         </div>
 
@@ -55,14 +54,12 @@ const Register = (props) => {
           id="login-form"
           className={`form-content ${activeTab === "login" ? "active" : ""}`}
         >
-          <h2>Add Category</h2>
           <RegisterCategory token={token} />
         </div>
         <div
           id="register-form"
           className={`form-content ${activeTab === "register" ? "active" : ""}`}
         >
-          <h2>Add Candidate</h2>
           <RegisterCandidate token={token} />
         </div>
       </div>

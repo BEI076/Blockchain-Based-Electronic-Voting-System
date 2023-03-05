@@ -10,17 +10,16 @@ const ManageCandidate = (props) => {
   const [refresh, setRefresh] = useState("");
   const refreshData = sessionStorage.getItem("refreshData");
 
-
   useEffect(() => {
     getFullCandidate(token).then((response) => {
-      console.log("candidate data: ");
-      console.log(response.data);
+      // console.log("candidate data: ");
+      // console.log(response.data);
       setCandidateData(response.data);
     });
   }, [token, refresh, refreshData]);
 
   const refreshHnadler = (refreshData) => {
-    console.log("triggered")
+    console.log("triggered");
     setRefresh(refreshData);
   };
 
@@ -31,7 +30,6 @@ const ManageCandidate = (props) => {
           <th>S.N</th>
           <th>Name</th>
           <th>Address</th>
-          <th>Citizenship ID</th>
           <th>DOB</th>
           <th>Category</th>
           <th>Party</th>

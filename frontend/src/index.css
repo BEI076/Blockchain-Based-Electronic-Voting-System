@@ -42,22 +42,29 @@ body {
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  /* border: solid 2px red; */
 }
 .container-item h2 {
-  color: #009879;
+  color: #e94560;
+  text-decoration: underline;
+  margin-top: 50px;
+  
 }
 
 .styled-table {
   border-collapse: collapse;
-  margin: 25px 0;
-  font-size: 18px;
+  /* margin: 25px 0; */
+  font-size: 20px;
+  font-weight: bold;
   font-family: sans-serif;
-  min-width: 80%;
+  min-width: 100%;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+  /* border: 2px green solid; */
 }
 
 .styled-table thead tr {
-  background-color: #009879;
+  /* background-color: #009879; */
+  background-color: #060047;
   color: #ffffff;
   text-align: left;
 }
@@ -76,7 +83,7 @@ body {
 }
 
 .styled-table tbody tr:last-of-type {
-  border-bottom: 2px solid #009879;
+  border-bottom: 2px solid #060047;
 }
 
 .styled-table tbody tr:hover {
@@ -88,7 +95,7 @@ body {
 .action {
   padding: 5px;
   font-size: 20px;
-  color: red;
+  color: #FF0000;
   cursor: pointer;
 }
 
@@ -159,7 +166,7 @@ body {
   border: none;
   outline: none;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 16px;
   font-weight: bold;
   background-color: #f2f2f2;
   border-radius: 5px 5px 0 0;
@@ -167,7 +174,10 @@ body {
 }
 
 .tab.active {
-  background-color: #007bff;
+  /* background-color: #007bff; */
+  /* background-color: #ddf7e3; */
+  background-color: #060047;
+  
   color: #fff;
   border-bottom: 2px solid #fff;
   transition: all 0.3s ease-in-out;
@@ -180,13 +190,25 @@ body {
 .form-content.active {
   display: block;
 }
+.admin-panel{
+  margin-bottom: 20px;
+  text-align: center;
+  font-size: 35px;
+  font-weight: bold;
+  color: #000;
+  text-shadow: 2px 2px 5px grey;
+
+
+
+}
 
 h2 {
   margin-bottom: 20px;
   text-align: center;
-  font-size: 26px;
+  font-size: 24px;
   font-weight: bold;
-  color: #007bff;
+  /* color: #007bff; */
+  color: #000;
 }
 
 form {
@@ -234,7 +256,9 @@ button[type="submit"] {
   padding: 10px;
   border: none;
   border-radius: 5px;
-  background-color: #007bff;
+  /* background-color: #007bff; */
+  /* background-color: #FF0000; */
+  background-color: #e94560;
   color: #fff;
   font-size: 18px;
   font-weight: bolder;
@@ -347,4 +371,12 @@ button[type="submit"]:hover {
   /* border: 2px solid red; */
 }
 
+.publish-btn{
+  position: absolute;
+  right: 150px;
+}
 
+.clear-btn{
+  position: absolute;
+  right: 300px;
+}

@@ -78,7 +78,7 @@ router.get("/get-voter-by-voter-id", userCheckToken, getVoterByVoterID);
 //router for vote
 router.post("/create-vote", CreateVote);
 router.delete("/delete-vote", DeleteVote);
-router.get("/get-stored-vote", GetVote);
+router.get("/get-vote", GetVote);
 
 // router for party
 router.post("/create-party", adminCheckToken, createParty);

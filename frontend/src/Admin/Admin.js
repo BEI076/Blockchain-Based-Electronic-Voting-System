@@ -42,7 +42,7 @@ const Admin = () => {
         <AdminLogin loginState={loginStateHandler} />
       ) : (
         <div className="admin-container">
-          <h2>Admin Panel</h2>
+          <h2 className="admin-panel">Admin Panel</h2>
           <div className="form-tabs">
             {/* register admin */}
             <button

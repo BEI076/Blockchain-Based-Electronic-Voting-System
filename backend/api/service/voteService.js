@@ -3,8 +3,14 @@ const pool = require("../../config/database");
 module.exports = {
   CreateVote: (data, callBack = () => {}) => {
     pool.query(
-      `INSERT INTO storevote (name, c_id, category, votes) VALUES (?,?,?,?)`,
-      [data.name, data.c_id, data.category, data.votes],
+      `INSERT INTO result(candidate_name, candidate_address, party_name, category_name, votes) VALUES (?,?,?,?,?)`,
+      [
+        data.candidate_name,
+        data.candidate_address,
+        data.party_name,
+        data.category_name,
+        data.votes,
+      ],
       (error, results, fileds) => {
         if (error) {
           return callBack(error);
@@ -15,7 +21,7 @@ module.exports = {
   },
   DeleteVote: (callBack = () => {}) => {
     // console.log("trucate called");
-    pool.query(`truncate storevote`, [], (error, results, fileds) => {
+    pool.query(`truncate result`, [], (error, results, fileds) => {
       if (error) {
         return callBack(error);
       }
@@ -23,7 +29,7 @@ module.exports = {
     });
   },
   GetVote: (callBack = () => {}) => {
-    pool.query(`SELECT * FROM storevote`, [], (error, results, fileds) => {
+    pool.query(`SELECT * FROM result  ORDER BY votes DESC`, [], (error, results, fileds) => {
       if (error) {
         return callBack(error);
       }

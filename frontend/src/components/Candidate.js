@@ -17,8 +17,7 @@ const Candidate = (props) => {
       <td>{item.ca_id}</td>
       <td>{item.name}</td>
       <td>{item.address}</td>
-      <td>{item.citizenshipid}</td>
-      <td>{item.dob}</td>
+      <td>{item.dob.substring(0,10)}</td>
       <td>{item.category_name}</td>
       <td>{item.party_name}</td>
       <td class="action" onClickCapture={deleteHandler}>

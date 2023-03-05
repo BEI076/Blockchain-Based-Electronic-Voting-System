@@ -301,3 +301,45 @@ export const transactionBraodcast = async (transaction, token) => {
     return response.data;
   });
 };
+
+// vote count
+export const countVote = async (token) => {
+  return await axios({
+    method: "GET",
+    url: baseurl + "/count-vote",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }).then((response) => {
+    return response.data;
+  });
+};
+
+// get-vote
+
+export const getVote = async (token) => {
+  return await axios({
+    method: "GET",
+    url: baseurl + "/get-vote",
+    responseType: "json",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }).then((response) => {
+    return response.data;
+  });
+};
+
+// delete vote
+
+export const deleteVote = async (token) => {
+  return await axios({
+    method: "DELETE",
+    url: baseurl + "/delete-vote",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }).then((response) => {
+    return response.data;
+  });
+};
