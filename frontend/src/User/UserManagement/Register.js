@@ -1,27 +1,51 @@
-
 import { useState } from "react";
 import { createVoter } from "../../Api/ApiHandler";
 const Register = (props) => {
-  const token = props.token;
   // defining states
   const [name, setName] = useState("");
   const [address, setAddress] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [dob, setDob] = useState("");
+  const [dob, setDob] = useState(new Date());
   const [citizenshipId, setCitizenshipId] = useState("");
   const [alert, setAlert] = useState("");
+  const [buttonState, setButtonState] = useState(false);
+
+  // age restriction function
+  const dobRestrictionHandler = (e) => {
+    setDob(e.target.value);
+    console.log(e.target.value);
+    const today = new Date();
+    const birthDate = new Date(dob);
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const monthDiff = today.getMonth() - birthDate.getMonth();
+    if (
+      monthDiff < 0 ||
+      (monthDiff === 0 && today.getDate() < birthDate.getDate())
+    ) {
+      age--;
+    }
+    if (age < 18) {
+      setAlert("You must be at least 18 years old to register to vote.");
+      console.log("You must be at least 18 years old to register to vote.");
+      setButtonState(false);
+
+      return;
+    } else {
+      setButtonState(true);
+      setAlert("");
+      return;
+    }
+  };
 
   //   register function
   const register = (e) => {
     e.preventDefault();
-
     createVoter(name, address, email, citizenshipId, dob, password).then(
       (response) => {
         setAlert(response.message);
       }
     );
-
     setName("");
     setEmail("");
     setAddress("");
@@ -79,7 +103,7 @@ const Register = (props) => {
           id="dob"
           name="dob"
           placeholder="Enter your date of birth"
-          onChange={(e) => setDob(e.target.value)}
+          onChangeCapture={dobRestrictionHandler}
           value={dob}
           required
         />
@@ -94,7 +118,9 @@ const Register = (props) => {
           value={password}
           required
         />
-        <button type="submit">Register</button>
+        <button disabled={!buttonState} type="submit">
+          Register
+        </button>
       </form>
       <div class="alert">{alert}</div>
     </>

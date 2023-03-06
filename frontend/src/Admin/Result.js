@@ -2,21 +2,21 @@ import { useState, useEffect } from "react";
 import { getVote, getCategory } from "../Api/ApiHandler";
 import VoteResultComponent from "../components/VoteResultTable";
 const Result = (props) => {
-  const token = props.token;
+  // const token = props.token;
   const refreshData = sessionStorage.getItem("refreshData");
   const [voteData, setVoteData] = useState([]);
   const [categoryData, setCategoryData] = useState([]);
   useEffect(() => {
-    getVote(token).then((response) => {
+    getVote().then((response) => {
       //   console.log(response.data);
       setVoteData([...response.data]);
 
-      getCategory(token).then((response) => {
+      getCategory().then((response) => {
         setCategoryData([...response.data]);
         // console.log(response.data);
       });
     });
-  }, [token, refreshData]);
+  }, [refreshData]);
   return (
     <div className="container-item">
       {categoryData.map((item) => {

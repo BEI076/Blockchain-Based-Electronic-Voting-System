@@ -23,10 +23,10 @@ module.exports = {
       }
     );
   },
-  updateVoterById: (data, callBack = () => {}) => {
+  updateVoterByVoterAddress: (data, callBack = () => {}) => {
     pool.query(
-      `UPDATE voter SET flag = true WHERE v_id = ?`,
-      [data.id],
+      `UPDATE voter SET flag = true WHERE voter_address = ?`,
+      [data.voter_address],
       (error, results, fields) => {
         if (error) {
           callBack(error);
@@ -36,18 +36,6 @@ module.exports = {
     );
   },
 
-  getVoterById: (id, callBack = () => {}) => {
-    pool.query(
-      `SELECT * FROM voter WHERE v_id = ?`,
-      [id],
-      (error, results, fields) => {
-        if (error) {
-          callBack(error);
-        }
-        return callBack(null, results[0]);
-      }
-    );
-  },
   getVoterByEmail: (email, callBack = () => {}) => {
     pool.query(
       `SELECT * FROM voter WHERE email = ?`,
@@ -68,18 +56,6 @@ module.exports = {
       }
       return callBack(null, results);
     });
-  },
-  getVoterByVoterID: (data, callBack = () => {}) => {
-    pool.query(
-      `SELECT * FROM voter where voter_id = ?`,
-      [data.voter_id],
-      (error, results, fields) => {
-        if (error) {
-          callBack(error);
-        }
-        return callBack(null, results);
-      }
-    );
   },
   deleteVoter: (data, callBack) => {
     pool.query(

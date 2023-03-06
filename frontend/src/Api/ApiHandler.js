@@ -1,5 +1,5 @@
 import axios from "axios";
-const baseurl = "http://192.168.1.120:3001";
+const baseurl = "http://192.168.1.107:3001";
 
 // admin login
 export const adminLogin = async (username, password) => {
@@ -95,13 +95,10 @@ export const createCategory = async (name, token) => {
 };
 
 // get category
-export const getCategory = async (token) => {
+export const getCategory = async () => {
   return await axios({
     method: "GET",
     url: baseurl + "/get-category",
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
     responseType: "json",
   }).then((response) => {
     return response.data;
@@ -238,14 +235,31 @@ export const getVoter = async (token) => {
   });
 };
 //get voter by voter id
+// export const getVoterByVoterId = async (voter_id, token) => {
+//   return await axios({
+//     method: "GET",
+//     url: baseurl + "/get-voter-by-voter-id",
+//     responseType: "json",
+//     data: {
+//       voter_id: voter_id,
+//     },
+//     headers: {
+//       Authorization: `Bearer ${token}`,
+//     },
+//   }).then((response) => {
+//     console.log(response.data);
+//     return response.data;
+//   });
+// };
 
-export const getVoterByVoterId = async (voter_id, token) => {
+// get voter by email
+export const getVoterByEmail = async (email, token) => {
   return await axios({
-    method: "GET",
-    url: baseurl + "/get-voter-by-voter-id",
+    method: "POST",
+    url: baseurl + "/get-voter-by-email",
     responseType: "json",
     data: {
-      voter_id: voter_id,
+      email: email,
     },
     headers: {
       Authorization: `Bearer ${token}`,
@@ -255,6 +269,26 @@ export const getVoterByVoterId = async (voter_id, token) => {
     return response.data;
   });
 };
+
+// update voter by voter address
+
+export const updateVoterByVoterAddress = async (voter_address, token) => {
+  return await axios({
+    method: "PATCH",
+    url: baseurl + "/update-voter-by-voter-address",
+    responseType: "json",
+    data: {
+      voter_address: voter_address,
+    },
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }).then((response) => {
+    console.log(response.data);
+    return response.data;
+  });
+};
+
 // delete voter
 export const deleteVoter = async (v_id, token) => {
   return await axios({
@@ -293,6 +327,7 @@ export const transactionBraodcast = async (transaction, token) => {
     url: baseurl + "/transaction-broadcast",
     data: {
       transaction: transaction,
+      token: token,
     },
     headers: {
       Authorization: `Bearer ${token}`,
@@ -317,14 +352,11 @@ export const countVote = async (token) => {
 
 // get-vote
 
-export const getVote = async (token) => {
+export const getVote = async () => {
   return await axios({
     method: "GET",
     url: baseurl + "/get-vote",
     responseType: "json",
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
   }).then((response) => {
     return response.data;
   });

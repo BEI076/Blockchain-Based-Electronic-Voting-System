@@ -19,10 +19,9 @@ const {
 const {
   createVoter,
   getVoter,
-  getVoterById,
-  getVoterByVoterID,
+  getVoterByEmail,
   deleteVoter,
-  updateVoterById,
+  updateVoterByVoterAddress,
 } = require("../controller/voterController");
 const {
   CreateVote,
@@ -49,7 +48,7 @@ const { userCheckToken } = require("../../auth/userTokenValidation");
 // router for category
 
 router.post("/create-category", adminCheckToken, createCategory);
-router.get("/get-category", adminCheckToken, getCategory);
+router.get("/get-category", getCategory);
 router.get("/get-category-by-id/:id", adminCheckToken, getCategoryById);
 router.delete("/delete-category", adminCheckToken, deleteCategory);
 
@@ -70,10 +69,13 @@ router.get("/get-full-candidate", adminCheckToken, getFullCandidate);
 
 router.post("/create-voter", createVoter);
 router.get("/get-voter", adminCheckToken, userCheckToken, getVoter);
-router.get("/get-voter-by-id/:id", getVoterById);
 router.delete("/delete-voter", adminCheckToken, deleteVoter);
-router.post("/update-voter", adminCheckToken, userCheckToken, updateVoterById);
-router.get("/get-voter-by-voter-id", userCheckToken, getVoterByVoterID);
+router.post("/get-voter-by-email", userCheckToken, getVoterByEmail);
+router.patch(
+  "/update-voter-by-voter-address",
+  userCheckToken,
+  updateVoterByVoterAddress
+);
 
 //router for vote
 router.post("/create-vote", CreateVote);

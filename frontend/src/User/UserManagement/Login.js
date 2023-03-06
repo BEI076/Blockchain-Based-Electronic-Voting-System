@@ -16,8 +16,6 @@ const Login = (props) => {
       sessionStorage.setItem("voterInfo", JSON.stringify(response.voter_data));
       // sessionStorage.setItem("voterInfo",response.voter_data);
 
-
-
       setAlert(response.message);
       setEmail("");
       setPassword("");

@@ -29,6 +29,7 @@ module.exports = {
   // broadcast transaction to all over the network
   transactionBroadcast: (data, callBack = () => {}) => {
     const trasactionArray = data.transaction;
+    const token = data.token;
     const requestPromises = [];
     trasactionArray.forEach((item) => {
       // console.log("-------------------------");
@@ -47,6 +48,9 @@ module.exports = {
           uri: networkNodeUrl + "/transaction",
           method: "POST",
           body: newTransaction,
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
           json: true,
         };
         requestPromises.push(rp(requestOptions));
@@ -58,7 +62,14 @@ module.exports = {
     const mineRequestPromises = [];
     const mineRequestOption = {
       uri: coin.currentNodeUrl + "/mine",
-      method: "GET",
+      method: "POST",
+      body: {
+        token: token,
+      },
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+
       json: true,
     };
 
@@ -74,7 +85,8 @@ module.exports = {
   },
 
   // mine a block
-  mine: (callBack = () => {}) => {
+  mine: (data, callBack = () => {}) => {
+    const token = data.token;
     const lastBlock = coin.getLastBlock();
     const previousBlockHash = lastBlock["hash"];
     const currentBlockData = {
@@ -96,6 +108,9 @@ module.exports = {
         uri: networkNodeUrl + "/receive-new-block",
         method: "POST",
         body: { newBlock: newBlock },
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
         json: true,
       };
       requestPromises.push(rp(requestOptions));
@@ -110,7 +125,7 @@ module.exports = {
 
   // the nodes present in the network recieve newblock and push into their chain
   receiveNewBlock: (data, callBack = () => {}) => {
-    const newBlock = data;
+    const newBlock = data.newBlock;
     const lastBlock = coin.getLastBlock();
     const correctHash = lastBlock.hash === newBlock.previousBlockHash;
     const correctIndex = lastBlock["index"] + 1 === newBlock["index"];
@@ -194,6 +209,9 @@ module.exports = {
       const requestOptions = {
         uri: networkNodeUrl + "/blockchain",
         method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
         json: true,
       };
       requestPromises.push(rp(requestOptions));
@@ -236,20 +254,20 @@ module.exports = {
   },
   // count total votes of each candidte
   countVote: async (callBack = () => {}) => {
+    console.log("called")
+    // implmementing consensus algorithm
+    // const nodeConsensus = {
+    //   uri: coin.currentNodeUrl + "/consensus",
+    //   method: "get",
+    //   json: true,
+    // };
+    // const nodeConsensusResponse = rp(nodeConsensus);
+    // Promise.resolve(nodeConsensusResponse).then((response) => {
+    //   console.log(response);
+    //   //
+    // });
 
-        // implmementing consensus algorithm
-        const nodeConsensus = {
-          uri: coin.currentNodeUrl + "/consensus",
-          method: "get",
-          json: true,
-        };
-        const nodeConsensusResponse = rp(nodeConsensus);
-        Promise.resolve(nodeConsensusResponse).then((response) => {
-          console.log(response);
-          //
-        });
-        
-        //count votes
+    //count votes
     const voteObject = [];
     getFullCandidate((error, results) => {
       if (error) {
@@ -267,18 +285,17 @@ module.exports = {
             candidate.party_name
           );
           CreateVote(vote);
-
-          voteObject.push(
-            coin.voteCount(
-              candidate.name,
-              candidate.candidate_address,
-              candidate.category_name,
-              candidate.party_name
-            )
-          );
+          // voteObject.push(
+          //   coin.voteCount(
+          //     candidate.name,
+          //     candidate.candidate_address,
+          //     candidate.category_name,
+          //     candidate.party_name
+          //   )
+          // );
         });
         // console.log(voteObject);
-        return callBack(null, voteObject);
+        // return callBack(null, voteObject);
       }
     });
   },

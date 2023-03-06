@@ -161,7 +161,7 @@ Blockchain.prototype.voteCount = function (
     candidate_name: name,
     candidate_address: candidate,
     category_name: category,
-    party_name: party,
+    party_name: party
   };
 };
 

@@ -2,11 +2,10 @@ const { hashSync, genSaltSync, compareSync } = require("bcrypt");
 const { v4: uuidv4 } = require("uuid");
 const {
   createVoter,
-  getVoterById,
+  getVoterByEmail,
   getVoter,
   deleteVoter,
-  updateVoterById,
-  getVoterByVoterID,
+  updateVoterByVoterAddress,
 } = require("../service/voterService");
 
 module.exports = {
@@ -30,9 +29,9 @@ module.exports = {
       });
     });
   },
-  updateVoterById: (req, res) => {
+  updateVoterByVoterAddress: (req, res) => {
     // console.log(`voter id = ${req.body.id}`);
-    updateVoterById(req.body, (error, results) => {
+    updateVoterByVoterAddress(req.body, (error, results) => {
       if (error) {
         console.log(error);
         return res.status(500).json({
@@ -47,34 +46,20 @@ module.exports = {
     });
   },
 
-  getVoterById: (req, res) => {
-    const id = req.params.id;
-    getVoterById(id, (error, results) => {
+  getVoterByEmail: (req, res) => {
+    getVoterByEmail(req.body.email, (error, results) => {
       if (error) {
-        console.log(error);
         return res.status(500).json({
           success: 0,
           message: "Database connection failed",
+          status: false,
         });
       }
+
       return res.status(200).json({
         success: 1,
         data: results,
-      });
-    });
-  },
-  getVoterByVoterID: (req, res) => {
-    getVoterByVoterID(req.body, (error, results) => {
-      if (error) {
-        console.log(error);
-        return res.status(500).json({
-          success: 0,
-          message: "Database connection failed",
-        });
-      }
-      return res.status(200).json({
-        success: 1,
-        data: results,
+        status: true,
       });
     });
   },
@@ -91,6 +76,7 @@ module.exports = {
       });
     });
   },
+
   deleteVoter: (req, res) => {
     deleteVoter(req.body, (err, results) => {
       if (err) {

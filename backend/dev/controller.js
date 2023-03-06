@@ -47,7 +47,7 @@ module.exports = {
     });
   },
   mine: (req, res) => {
-    mine((error, results) => {
+    mine(req.body,(error, results) => {
       if (error) {
         console.log(error);
         return;
@@ -59,7 +59,7 @@ module.exports = {
     });
   },
   receiveNewBlock: (req, res) => {
-    receiveNewBlock(req.body.newBlock, (error, results) => {
+    receiveNewBlock(req.body, (error, results) => {
       if (error) {
         console.log(error);
         return;
