@@ -11,7 +11,7 @@ module.exports = {
       if (!results) {
         return res.json({
           success: 0,
-          data: "Invalid email or password",
+          message: "Invalid email or password",
           state: false,
         });
       }
@@ -32,7 +32,7 @@ module.exports = {
       } else {
         return res.json({
           success: 0,
-          data: "Invalid email or password",
+          message: "lInvalid email or password",
           state: false,
         });
       }
