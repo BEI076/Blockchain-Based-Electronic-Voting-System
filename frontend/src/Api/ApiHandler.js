@@ -1,5 +1,5 @@
 import axios from "axios";
-const baseurl = "http://192.168.1.120:3001";
+const baseurl = "http://192.168.1.100:3001";
 
 // admin login
 export const adminLogin = async (username, password) => {

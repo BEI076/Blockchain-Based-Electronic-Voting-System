@@ -2,6 +2,7 @@ const bodyParser = require("body-parser");
 const Blockchain = require("./blockchain");
 const coin = new Blockchain();
 const rp = require("request-promise");
+const Mutex = require('async-mutex').Mutex
 var express = require("express");
 var app = express();
 app.use(bodyParser.json());
@@ -31,27 +32,14 @@ module.exports = {
     const trasactionArray = data.transaction;
     const token = data.token;
     // implmementing consensus algorithm
-
-    while (!coin.state);
-    //taking control
-    const takeRequestPromises = [];
-    coin.networkNodes.forEach((networkNodeUrl) => {
-      const requestOptions = {
-        uri: networkNodeUrl + "/set-state",
-        method: "POST",
-        body: {
-          state: false,
-        },
-        json: true,
-      };
-      takeRequestPromises.push(rp(requestOptions));
-    });
-
-    if (coin.state) {
-      const requestPromises = [];
-      trasactionArray.forEach((item) => {
-        // console.log("-------------------------");
-        // console.log(item);
+    const mutex =new Mutex()
+    async function vote(currentNodeUrl){
+      const releaseLock = await mutex.acquire();
+      try{
+       console.log("While started ",Date.now())
+       const requestPromises = [];
+       trasactionArray.forEach((item) => {
+      
         const newTransaction = coin.createNewTransaction(
           item.name, // name
           item.candidate_address, // candidate unique address
@@ -61,24 +49,24 @@ module.exports = {
         );
         coin.addTransactionToPendingTransactions(newTransaction);
 
-        coin.networkNodes.forEach((networkNodeUrl) => {
-          const requestOptions = {
-            uri: networkNodeUrl + "/transaction",
-            method: "POST",
-            body: newTransaction,
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-            json: true,
-          };
-          requestPromises.push(rp(requestOptions));
-        });
-      });
+        // coin.networkNodes.forEach((networkNodeUrl) => {
+        //   const requestOptions = {
+        //     uri: networkNodeUrl + "/transaction",
+        //     method: "POST",
+        //     body: newTransaction,
+        //     headers: {
+        //       Authorization: `Bearer ${token}`,
+        //     },
+        //     json: true,
+        //   };
+        //   requestPromises.push(rp(requestOptions));
+        // });
+       });
 
-      // mining
-      // http://localhost:3001/mine
-      const mineRequestPromises = [];
-      const mineRequestOption = {
+       // mining
+       // http://localhost:3001/mine
+       const mineRequestPromises = [];
+       const mineRequestOption = {
         uri: coin.currentNodeUrl + "/mine",
         method: "POST",
         body: {
@@ -89,32 +77,24 @@ module.exports = {
         },
 
         json: true,
-      };
+       };
 
-      mineRequestPromises.push(rp(mineRequestOption));
-      Promise.all(mineRequestPromises).then((data) => console.log(data));
+       mineRequestPromises.push(rp(mineRequestOption));
+       Promise.all(mineRequestPromises).then((data) => console.log(data));
 
-      Promise.all(requestPromises).then((data) => {
+       Promise.all(requestPromises).then((data) => {
         // return;
         return callBack(null, {
           note: "Transaction created and broadcasted successfully!",
         });
-      });
-    }
+       });
+      } finally{
+        releaseLock();
+      }
 
-    //releasing control
-    const releaseRequestPromises = [];
-    coin.networkNodes.forEach((networkNodeUrl) => {
-      const requestOptions = {
-        uri: networkNodeUrl + "/set-state",
-        method: "POST",
-        body: {
-          state: true,
-        },
-        json: true,
-      };
-      releaseRequestPromises.push(rp(requestOptions));
-    });
+    
+    }
+  
   },
 
   // mine a block

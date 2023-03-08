@@ -8,7 +8,7 @@ const cors = require("cors");
 
 app.use(
   cors({
-    origin: "http://192.168.1.120:3000",
+    origin: "http://192.168.1.100:3000",
   })
 );
 
