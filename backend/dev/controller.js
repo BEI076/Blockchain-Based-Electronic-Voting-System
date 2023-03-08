@@ -10,6 +10,7 @@ const {
   consensus,
   countVote,
   returnNodesUrl,
+  setState,
 } = require("./networkNode");
 
 module.exports = {
@@ -130,6 +131,18 @@ module.exports = {
   },
   countVote: (req, res) => {
     countVote((error, results) => {
+      if (error) {
+        console.log(error);
+        return;
+      }
+      return res.status(200).json({
+        success: 1,
+        data: results,
+      });
+    });
+  },
+  setState: (req, res) => {
+    setState(req.body.state, (error, results) => {
       if (error) {
         console.log(error);
         return;

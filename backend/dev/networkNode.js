@@ -30,57 +30,90 @@ module.exports = {
   transactionBroadcast: (data, callBack = () => {}) => {
     const trasactionArray = data.transaction;
     const token = data.token;
-    const requestPromises = [];
-    trasactionArray.forEach((item) => {
-      // console.log("-------------------------");
-      // console.log(item);
-      const newTransaction = coin.createNewTransaction(
-        item.name, // name
-        item.candidate_address, // candidate unique address
-        item.voter_address, // voter (unique address)
-        item.party_name, // party name
-        item.category_name // category name
-      );
-      coin.addTransactionToPendingTransactions(newTransaction);
+    // implmementing consensus algorithm
 
-      coin.networkNodes.forEach((networkNodeUrl) => {
-        const requestOptions = {
-          uri: networkNodeUrl + "/transaction",
-          method: "POST",
-          body: newTransaction,
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          json: true,
-        };
-        requestPromises.push(rp(requestOptions));
-      });
+    while (!coin.state);
+    //taking control
+    const takeRequestPromises = [];
+    coin.networkNodes.forEach((networkNodeUrl) => {
+      const requestOptions = {
+        uri: networkNodeUrl + "/set-state",
+        method: "POST",
+        body: {
+          state: false,
+        },
+        json: true,
+      };
+      takeRequestPromises.push(rp(requestOptions));
     });
 
-    // mining
-    // http://localhost:3001/mine
-    const mineRequestPromises = [];
-    const mineRequestOption = {
-      uri: coin.currentNodeUrl + "/mine",
-      method: "POST",
-      body: {
-        token: token,
-      },
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+    if (coin.state) {
+      const requestPromises = [];
+      trasactionArray.forEach((item) => {
+        // console.log("-------------------------");
+        // console.log(item);
+        const newTransaction = coin.createNewTransaction(
+          item.name, // name
+          item.candidate_address, // candidate unique address
+          item.voter_address, // voter (unique address)
+          item.party_name, // party name
+          item.category_name // category name
+        );
+        coin.addTransactionToPendingTransactions(newTransaction);
 
-      json: true,
-    };
-
-    mineRequestPromises.push(rp(mineRequestOption));
-    Promise.all(mineRequestPromises).then((data) => console.log(data));
-
-    Promise.all(requestPromises).then((data) => {
-      // return;
-      return callBack(null, {
-        note: "Transaction created and broadcasted successfully!",
+        coin.networkNodes.forEach((networkNodeUrl) => {
+          const requestOptions = {
+            uri: networkNodeUrl + "/transaction",
+            method: "POST",
+            body: newTransaction,
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+            json: true,
+          };
+          requestPromises.push(rp(requestOptions));
+        });
       });
+
+      // mining
+      // http://localhost:3001/mine
+      const mineRequestPromises = [];
+      const mineRequestOption = {
+        uri: coin.currentNodeUrl + "/mine",
+        method: "POST",
+        body: {
+          token: token,
+        },
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+
+        json: true,
+      };
+
+      mineRequestPromises.push(rp(mineRequestOption));
+      Promise.all(mineRequestPromises).then((data) => console.log(data));
+
+      Promise.all(requestPromises).then((data) => {
+        // return;
+        return callBack(null, {
+          note: "Transaction created and broadcasted successfully!",
+        });
+      });
+    }
+
+    //releasing control
+    const releaseRequestPromises = [];
+    coin.networkNodes.forEach((networkNodeUrl) => {
+      const requestOptions = {
+        uri: networkNodeUrl + "/set-state",
+        method: "POST",
+        body: {
+          state: true,
+        },
+        json: true,
+      };
+      releaseRequestPromises.push(rp(requestOptions));
     });
   },
 
@@ -217,9 +250,6 @@ module.exports = {
       const requestOptions = {
         uri: networkNodeUrl + "/blockchain",
         method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
         json: true,
       };
       requestPromises.push(rp(requestOptions));
@@ -312,5 +342,8 @@ module.exports = {
         // return callBack(null, voteObject);
       }
     });
+  },
+  setState: (state, callBack = () => {}) => {
+    coin.setState(state);
   },
 };
