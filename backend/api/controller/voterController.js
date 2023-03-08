@@ -64,6 +64,24 @@ module.exports = {
     });
   },
 
+  getAd: (req, res) => {
+    getVoterByEmail(req.body.email, (error, results) => {
+      if (error) {
+        return res.status(500).json({
+          success: 0,
+          message: "Database connection failed",
+          status: false,
+        });
+      }
+
+      return res.status(200).json({
+        success: 1,
+        data: results,
+        status: true,
+      });
+    });
+  },
+
   getVoter: (req, res) => {
     getVoter((error, results) => {
       if (error) {

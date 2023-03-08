@@ -35,7 +35,7 @@ const {
   deletePartyById,
 } = require("../controller/partyController");
 
-const { createAdmin } = require("../controller/adminController");
+const { createAdmin, deleteAdmin, getAdmin } = require("../controller/adminController");
 
 const { login } = require("../../auth/adminLoginController");
 
@@ -89,7 +89,9 @@ router.delete("/delete-party", adminCheckToken, deletePartyById);
 
 // admin
 router.post("/create-admin", createAdmin);
- 
+router.delete("/delete-admin", adminCheckToken, deleteAdmin);
+router.get("get-admin",adminCheckToken, getAdmin)
+
 //admin login
 router.post("/admin-login", login);
 
