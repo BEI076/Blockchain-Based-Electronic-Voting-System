@@ -253,16 +253,13 @@ export const getVoter = async (token) => {
 // };
 
 // get voter by email
-export const getVoterByEmail = async (email, token) => {
+export const getVoterByEmail = async (email) => {
   return await axios({
     method: "POST",
     url: baseurl + "/get-voter-by-email",
     responseType: "json",
     data: {
       email: email,
-    },
-    headers: {
-      Authorization: `Bearer ${token}`,
     },
   }).then((response) => {
     console.log(response.data);

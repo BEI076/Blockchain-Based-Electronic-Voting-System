@@ -70,7 +70,7 @@ router.get("/get-full-candidate", adminCheckToken, getFullCandidate);
 router.post("/create-voter", createVoter);
 router.get("/get-voter", adminCheckToken, userCheckToken, getVoter);
 router.delete("/delete-voter", adminCheckToken, deleteVoter);
-router.post("/get-voter-by-email", userCheckToken, getVoterByEmail);
+router.post("/get-voter-by-email", getVoterByEmail);
 router.patch(
   "/update-voter-by-voter-address",
   userCheckToken,

@@ -35,7 +35,7 @@ const Vote = (props) => {
       setCategoryData(response.data);
       // console.log(response.data)
     });
-    getVoterByEmail(voterInfo.email, token).then((response) => {
+    getVoterByEmail(voterInfo.email).then((response) => {
       if (response.data.flag === 1) {
         setAlert("Already Voted");
         setButtonState(false);

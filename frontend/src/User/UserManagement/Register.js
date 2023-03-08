@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { createVoter } from "../../Api/ApiHandler";
+import { createVoter, getVoterByEmail } from "../../Api/ApiHandler";
 const Register = (props) => {
   // defining states
   const [name, setName] = useState("");
@@ -10,6 +10,20 @@ const Register = (props) => {
   const [citizenshipId, setCitizenshipId] = useState("");
   const [alert, setAlert] = useState("");
   const [buttonState, setButtonState] = useState(false);
+
+  // const multiple voter handler
+  const multipleVoterHandler = (e) => {
+    setEmail(e.target.value);
+    getVoterByEmail(e.target.value).then((response) => {
+      try {
+        if (response.data.email === e.target.value) {
+          setAlert("Voter Already Registered");
+        }
+      } catch {
+        setAlert("");
+      }
+    });
+  };
 
   // age restriction function
   const dobRestrictionHandler = (e) => {
@@ -27,7 +41,7 @@ const Register = (props) => {
     }
     if (age < 18) {
       setAlert("You must be at least 18 years old to register to vote.");
-      console.log("You must be at least 18 years old to register to vote.");
+      // console.log("You must be at least 18 years old to register to vote.");
       setButtonState(false);
 
       return;
@@ -81,7 +95,7 @@ const Register = (props) => {
           id="email"
           name="email"
           placeholder="Enter your email address"
-          onChange={(e) => setEmail(e.target.value)}
+          onChange={multipleVoterHandler}
           value={email}
           required
         />
