@@ -1,0 +1,8 @@
+Backend: 
+    1. package.json
+    2. app.js
+    3. .env [for config/database] [database host device ip address]
+
+Frontend:
+    1. ApiHandler.js
+    

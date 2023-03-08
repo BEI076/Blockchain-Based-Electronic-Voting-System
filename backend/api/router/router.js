@@ -89,7 +89,7 @@ router.delete("/delete-party", adminCheckToken, deletePartyById);
 
 // admin
 router.post("/create-admin", createAdmin);
-
+ 
 //admin login
 router.post("/admin-login", login);
 

@@ -129,6 +129,7 @@ Blockchain.prototype.chainIsValid = function (blockchain) {
   return validChain;
 };
 
+
 // vote count
 Blockchain.prototype.voteCount = function (
   candidateName,

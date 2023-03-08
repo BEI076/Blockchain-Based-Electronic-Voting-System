@@ -4,6 +4,7 @@ import Register from "./Register/Register";
 import AdminLogin from "./AdminLogin";
 import RegisterAdmin from "./Register/RegisterAdmin";
 import Result from "./Result";
+import NodeManage from "./NodeManage";
 
 const Admin = () => {
   // defining states
@@ -44,6 +45,13 @@ const Admin = () => {
         <div className="admin-container">
           <h2 className="admin-panel">Admin Panel</h2>
           <div className="form-tabs">
+            {/* manage nodes */}
+            <button
+              className={`tab ${activeTab === "node" ? "active" : ""}`}
+              onClick={() => showForm("node")}
+            >
+              Manage Nodes
+            </button>
             {/* register admin */}
             <button
               className={`tab ${activeTab === "admin" ? "active" : ""}`}
@@ -101,11 +109,16 @@ const Admin = () => {
           {/* result */}
           <div
             id="result-form"
-            className={`form-content ${
-              activeTab === "result" ? "active" : ""
-            }`}
+            className={`form-content ${activeTab === "result" ? "active" : ""}`}
           >
             <Result token={token} />
+          </div>
+          {/* manage nodes */}
+          <div
+            id="node-form"
+            className={`form-content ${activeTab === "node" ? "active" : ""}`}
+          >
+            <NodeManage token={token} />
           </div>
         </div>
       )}

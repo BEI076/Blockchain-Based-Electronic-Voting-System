@@ -48,7 +48,6 @@ body {
   color: #e94560;
   text-decoration: underline;
   margin-top: 50px;
-  
 }
 
 .styled-table {
@@ -95,7 +94,7 @@ body {
 .action {
   padding: 5px;
   font-size: 20px;
-  color: #FF0000;
+  color: #ff0000;
   cursor: pointer;
 }
 
@@ -177,7 +176,7 @@ body {
   /* background-color: #007bff; */
   /* background-color: #ddf7e3; */
   background-color: #060047;
-  
+
   color: #fff;
   border-bottom: 2px solid #fff;
   transition: all 0.3s ease-in-out;
@@ -190,16 +189,13 @@ body {
 .form-content.active {
   display: block;
 }
-.admin-panel{
+.admin-panel {
   margin-bottom: 20px;
   text-align: center;
   font-size: 35px;
   font-weight: bold;
   color: #000;
   text-shadow: 2px 2px 5px grey;
-
-
-
 }
 
 h2 {
@@ -345,9 +341,9 @@ button[type="submit"]:hover {
 
 .alert {
   padding: 10px;
-  font-size: 20px;
+  font-size: 15px;
   font-weight: bold;
-  color: rgb(6, 175, 124);
+  color: #060047;
   text-align: center;
 }
 
@@ -359,11 +355,11 @@ button[type="submit"]:hover {
 
 /* form */
 
-.vote-form-container{
+.vote-form-container {
   width: 60%;
   margin: 0 auto;
 }
-.form-item-container{
+.form-item-container {
   display: flex;
   justify-content: space-evenly;
   flex-wrap: wrap;
@@ -371,12 +367,39 @@ button[type="submit"]:hover {
   /* border: 2px solid red; */
 }
 
-.publish-btn{
+.publish-btn {
   position: absolute;
   right: 150px;
 }
 
-.clear-btn{
+.clear-btn {
   position: absolute;
   right: 300px;
+}
+
+.node-container {
+  margin: 0 auto;
+  max-width: 50%;
+}
+
+.node-container h3 {
+  text-align: center;
+  padding-bottom: 5px;
+  border-bottom: 3px solid #060047;
+}
+
+.node-container ul {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+
+}
+
+.node-container ul li{
+  width: 100%;
+  padding: 10px;
+  list-style-type: none;
+  font-size: 18px;
+  font-weight: bold;
+  color: #363535;
 }

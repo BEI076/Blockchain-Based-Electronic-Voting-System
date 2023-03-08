@@ -9,6 +9,7 @@ const {
   registerNodesBulk,
   consensus,
   countVote,
+  returnNodesUrl,
 } = require("./networkNode");
 
 module.exports = {
@@ -47,7 +48,7 @@ module.exports = {
     });
   },
   mine: (req, res) => {
-    mine(req.body,(error, results) => {
+    mine(req.body, (error, results) => {
       if (error) {
         console.log(error);
         return;
@@ -71,7 +72,7 @@ module.exports = {
     });
   },
   registerBroadcast: (req, res) => {
-    registerBroadcast(req.body.newNodeUrl, (error, results) => {
+    registerBroadcast(req.body, (error, results) => {
       if (error) {
         console.log(error);
         return;
@@ -79,6 +80,7 @@ module.exports = {
       return res.status(200).json({
         success: 1,
         data: results,
+        message: "Node sucessfully added to the network",
       });
     });
   },
@@ -112,6 +114,14 @@ module.exports = {
         console.log(error);
         return;
       }
+      return res.status(200).json({
+        success: 1,
+        data: results,
+      });
+    });
+  },
+  returnNodesUrl: (req, res) => {
+    returnNodesUrl((error, results) => {
       return res.status(200).json({
         success: 1,
         data: results,

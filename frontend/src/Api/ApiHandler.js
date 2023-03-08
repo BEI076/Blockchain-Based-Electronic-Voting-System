@@ -1,5 +1,5 @@
 import axios from "axios";
-const baseurl = "http://192.168.1.107:3001";
+const baseurl = "http://192.168.1.120:3001";
 
 // admin login
 export const adminLogin = async (username, password) => {
@@ -375,3 +375,47 @@ export const deleteVote = async (token) => {
     return response.data;
   });
 };
+
+//register and broadcast node
+export const registeAndBroadcastNode = async (newNodeUrl, token) => {
+  return await axios({
+    method: "POST",
+    url: baseurl + "/register-and-broadcast-node",
+    data: {
+      newNodeUrl: newNodeUrl,
+      token: token,
+    },
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }).then((response) => {
+    return response.data;
+  });
+};
+
+// get newtork nodes
+export const getNetworkNodes = async (token) => {
+  return await axios({
+    method: "GET",
+    url: baseurl + "/get-network-nodes",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }).then((response) => {
+    return response.data;
+  });
+};
+
+// export const getVoter = async (token) => {
+//   return await axios({
+//     method: "GET",
+//     url: baseurl + "/get-voter",
+//     responseType: "json",
+
+//     headers: {
+//       Authorization: `Bearer ${token}`,
+//     },
+//   }).then((response) => {
+//     return response.data;
+//   });
+// };

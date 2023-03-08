@@ -145,7 +145,9 @@ module.exports = {
   },
 
   // the current node recieve new node, register it and broadcast to all the nodes of the network
-  registerBroadcast: (newNodeUrl, callBack = () => {}) => {
+  registerBroadcast: (data, callBack = () => {}) => {
+    const newNodeUrl = data.newNodeUrl;
+    const token = data.token;
     if (coin.networkNodes.indexOf(newNodeUrl) == -1)
       coin.networkNodes.push(newNodeUrl);
     const regNodesPromises = [];
@@ -154,6 +156,9 @@ module.exports = {
         uri: networkNodeUrl + "/register-node",
         method: "POST",
         body: { newNodeUrl: newNodeUrl },
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
         json: true,
       };
       regNodesPromises.push(rp(requestOptions));
@@ -165,6 +170,9 @@ module.exports = {
           method: "POST",
           body: {
             allNetworkNodes: [...coin.networkNodes, coin.currentNodeUrl],
+          },
+          headers: {
+            Authorization: `Bearer ${token}`,
           },
           json: true,
         };
@@ -252,9 +260,15 @@ module.exports = {
       }
     });
   },
+  // return all nodes in the network (network nodes)
+  returnNodesUrl: (callBack = () => {}) => {
+    const urls = coin.networkNodes;
+    console.log(`urls = ${urls}`);
+    return callBack(null, urls);
+  },
   // count total votes of each candidte
   countVote: async (callBack = () => {}) => {
-    console.log("called")
+    console.log("called");
     // implmementing consensus algorithm
     // const nodeConsensus = {
     //   uri: coin.currentNodeUrl + "/consensus",

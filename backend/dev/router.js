@@ -10,6 +10,7 @@ const {
   registerNodesBulk,
   consensus,
   countVote,
+  returnNodesUrl,
 } = require("./controller");
 
 const { checkToken } = require("../auth/tokenValidation");
@@ -24,13 +25,16 @@ router.post("/mine", adminCheckToken, userCheckToken, mine);
 router.post("/receive-new-block", adminCheckToken, receiveNewBlock);
 
 //nodes synchronization
-router.post("/register-and-broadcast-node", registerBroadcast);
-router.post("/register-node", registerNode);
-router.post("/register-nodes-bulk", registerNodesBulk);
+router.post("/register-and-broadcast-node", adminCheckToken, registerBroadcast);
+router.post("/register-node", adminCheckToken, registerNode);
+router.post("/register-nodes-bulk", adminCheckToken, registerNodesBulk);
 
 //block verification
-router.get("/consensus", adminCheckToken, consensus);
+router.get("/consensus", consensus);
+
+// return network nodes
+router.get("/get-network-nodes", returnNodesUrl);
 
 //count vote
-router.get("/count-vote", countVote);
+router.get("/count-vote", adminCheckToken, countVote);
 module.exports = router;
