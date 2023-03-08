@@ -2,7 +2,6 @@ const bodyParser = require("body-parser");
 const Blockchain = require("./blockchain");
 const coin = new Blockchain();
 const rp = require("request-promise");
-const Mutex = require("async-mutex").Mutex;
 var express = require("express");
 var app = express();
 app.use(bodyParser.json());
@@ -10,7 +9,6 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 const { getFullCandidate } = require("../api/service/candidateService");
 const { CreateVote } = require("../api/service/voteService");
-const mutex = new Mutex();
 //creating blockchain endpoint
 
 module.exports = {
@@ -29,70 +27,61 @@ module.exports = {
   },
 
   // broadcast transaction to all over the network
-  transactionBroadcast: async(data, callBack = () => {}) => {
+  transactionBroadcast: (data, callBack = () => {}) => {
+    const trasactionArray = data.transaction;
+    const token = data.token;
+    const requestPromises = [];
+    trasactionArray.forEach((item) => {
+      // console.log("-------------------------");
+      // console.log(item);
+      const newTransaction = coin.createNewTransaction(
+        item.name, // name
+        item.candidate_address, // candidate unique address
+        item.voter_address, // voter (unique address)
+        item.party_name, // party name
+        item.category_name // category name
+      );
+      coin.addTransactionToPendingTransactions(newTransaction);
 
-    // implmementing consensus algorithm
-
-      const trasactionArray = data.transaction;
-      const token = data.token;
-      const releaseLock = await mutex.acquire(coin.currentNodeUrl);
-      try {
-        
-        console.log("While started ", Date.now());
-        const requestPromises = [];
-        trasactionArray.forEach((item) => {
-          const newTransaction = coin.createNewTransaction(
-            item.name, // name
-            item.candidate_address, // candidate unique address
-            item.voter_address, // voter (unique address)
-            item.party_name, // party name
-            item.category_name // category name
-          );
-          coin.addTransactionToPendingTransactions(newTransaction);
-
-          // coin.networkNodes.forEach((networkNodeUrl) => {
-          //   const requestOptions = {
-          //     uri: networkNodeUrl + "/transaction",
-          //     method: "POST",
-          //     body: newTransaction,
-          //     headers: {
-          //       Authorization: `Bearer ${token}`,
-          //     },
-          //     json: true,
-          //   };
-          //   requestPromises.push(rp(requestOptions));
-          // });
-        });
-
-        // mining
-        // http://localhost:3001/mine
-        const mineRequestPromises = [];
-        const mineRequestOption = {
-          uri: coin.currentNodeUrl + "/mine",
+      coin.networkNodes.forEach((networkNodeUrl) => {
+        const requestOptions = {
+          uri: networkNodeUrl + "/transaction",
           method: "POST",
-          body: {
-            token: token,
-          },
+          body: newTransaction,
           headers: {
             Authorization: `Bearer ${token}`,
           },
-
           json: true,
         };
+        requestPromises.push(rp(requestOptions));
+      });
+    });
 
-        mineRequestPromises.push(rp(mineRequestOption));
-        Promise.all(mineRequestPromises).then((data) => console.log(data));
+    // mining
+    // http://localhost:3001/mine
+    const mineRequestPromises = [];
+    const mineRequestOption = {
+      uri: coin.currentNodeUrl + "/mine",
+      method: "POST",
+      body: {
+        token: token,
+      },
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
 
-        Promise.all(requestPromises).then((data) => {
-          // return;
-          return callBack(null, {
-            note: "Transaction created and broadcasted successfully!",
-          });
-        });
-      } finally {
-        releaseLock();
-      
-    }
+      json: true,
+    };
+
+    mineRequestPromises.push(rp(mineRequestOption));
+    Promise.all(mineRequestPromises).then((data) => console.log(data));
+
+    Promise.all(requestPromises).then((data) => {
+      // return;
+      return callBack(null, {
+        note: "Transaction created and broadcasted successfully!",
+      });
+    });
   },
 
   // mine a block
@@ -228,6 +217,9 @@ module.exports = {
       const requestOptions = {
         uri: networkNodeUrl + "/blockchain",
         method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
         json: true,
       };
       requestPromises.push(rp(requestOptions));
@@ -320,8 +312,5 @@ module.exports = {
         // return callBack(null, voteObject);
       }
     });
-  },
-  setState: (state, callBack = () => {}) => {
-    coin.setState(state);
   },
 };

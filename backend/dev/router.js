@@ -11,7 +11,6 @@ const {
   consensus,
   countVote,
   returnNodesUrl,
-  setState,
 } = require("./controller");
 
 const { checkToken } = require("../auth/tokenValidation");
@@ -38,7 +37,4 @@ router.get("/get-network-nodes", returnNodesUrl);
 
 //count vote
 router.get("/count-vote", adminCheckToken, countVote);
-
-//set state
-router.post("/set-state", setState);
 module.exports = router;

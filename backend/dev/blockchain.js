@@ -9,18 +9,8 @@ function Blockchain() {
   this.createNewBlock(100, "0", "0"); // default parameters for genesis block
   this.currentNodeUrl = currentNodeUrl; // store current node url
   this.networkNodes = []; // store url of all the connected nodes in the netwrok
-  this.state = true;
 }
 
-Blockchain.prototype.setState = function (state) {
-  if (!state) {
-    this.state = false;
-    console.log(`state = ${state}`);
-  } else {
-    this.state = true;
-    console.log(`state = ${state}`);
-  }
-};
 // create a new block (nonce, previousBlockHash, hash)
 Blockchain.prototype.createNewBlock = function (
   nonce,
@@ -139,6 +129,7 @@ Blockchain.prototype.chainIsValid = function (blockchain) {
   return validChain;
 };
 
+
 // vote count
 Blockchain.prototype.voteCount = function (
   candidateName,
@@ -171,7 +162,7 @@ Blockchain.prototype.voteCount = function (
     candidate_name: name,
     candidate_address: candidate,
     category_name: category,
-    party_name: party,
+    party_name: party
   };
 };
 
