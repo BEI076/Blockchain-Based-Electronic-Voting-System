@@ -88,9 +88,9 @@ router.get("/get-party", adminCheckToken, getParty);
 router.delete("/delete-party", adminCheckToken, deletePartyById);
 
 // admin
-router.post("/create-admin", createAdmin);
+router.post("/create-admin",adminCheckToken, createAdmin);
 router.delete("/delete-admin", adminCheckToken, deleteAdmin);
-router.get("get-admin",adminCheckToken, getAdmin)
+router.get("/get-admin",adminCheckToken, getAdmin)
 
 //admin login
 router.post("/admin-login", login);

@@ -33,6 +33,35 @@ export const createAdmin = async (username, password, token) => {
   });
 };
 
+// get admin
+export const getAdmin = async (token) => {
+  console.log(token);
+  return await axios({
+    method: "GET",
+    url: baseurl + "/get-admin",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }).then((response) => {
+    return response.data;
+  });
+};
+// delete admin
+export const deleteAdmin = async (id, token) => {
+  console.log(token);
+  return await axios({
+    method: "DELETE",
+    url: baseurl + "/delete-admin",
+    data: {
+      id: id,
+    },
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }).then((response) => {
+    return response.data;
+  });
+};
 // create party
 export const createParty = async (name, token) => {
   return await axios({

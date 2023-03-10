@@ -403,3 +403,10 @@ button[type="submit"]:hover {
   font-weight: bold;
   color: #363535;
 }
+
+.admin_container{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}

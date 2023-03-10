@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { createAdmin } from "../../Api/ApiHandler";
+import ManageAdmin from "../Manage/ManageAdmin";
 
 const RegisterAdmin = (props) => {
   const token = props.token;
@@ -48,6 +49,7 @@ const RegisterAdmin = (props) => {
         <button type="submit">Add Admin</button>
       </form>
       <div class="alert">{alert}</div>
+      <ManageAdmin token={token} />
     </div>
   );
 };
