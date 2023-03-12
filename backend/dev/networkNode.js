@@ -217,11 +217,9 @@ module.exports = {
       const requestOptions = {
         uri: networkNodeUrl + "/blockchain",
         method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
         json: true,
-      };
+      }; 
+      
       requestPromises.push(rp(requestOptions));
     });
     Promise.all(requestPromises).then((blockchains) => {
