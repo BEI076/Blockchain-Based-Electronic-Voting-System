@@ -142,7 +142,7 @@ body {
 /* form css */
 
 .form-container {
-  max-width: 500px;
+  width: 500px;
   margin: 0 auto;
   padding: 40px;
   border: 1px solid #ccc;
@@ -231,6 +231,7 @@ input[type="number"],
 input[type="email"],
 input[type="password"],
 input[type="date"],
+input[type="file"],
 select {
   padding: 10px;
   margin-bottom: 20px;
@@ -331,13 +332,6 @@ button[type="submit"]:hover {
   font-size: 14px;
   font-weight: bold;
 }
-/* .vote-form-container{
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  width: 60%;
-} */
 
 .alert {
   padding: 10px;
@@ -392,10 +386,9 @@ button[type="submit"]:hover {
   display: flex;
   flex-direction: column;
   text-align: center;
-
 }
 
-.node-container ul li{
+.node-container ul li {
   width: 100%;
   padding: 10px;
   list-style-type: none;
@@ -404,9 +397,108 @@ button[type="submit"]:hover {
   color: #363535;
 }
 
-.admin_container{
+.admin_container {
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
 }
+.image {
+  display: flex;
+  flex-direction: column;
+}
+
+img {
+  margin-bottom: 10px;
+}
+.raw-voter-container{
+  border: 2px solid #060047;
+  border-radius: 10px;
+  padding: 20px;
+  margin-top: 20px;
+}
+.voter-raw {
+  display: flex;
+  justify-content: space-between;
+  /* margin-top: 50px; */
+}
+
+.info {
+  padding: 10px;
+  margin-bottom: 20px;
+  border: 2px solid white;
+  outline: none;
+  border-radius: 5px;
+  background-color: #f2f2f2;
+  font-size: 15px;
+  font-weight: bold;
+  color: #363535;
+  display: flex;
+  /* align-items: center; */
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  width: 30%;
+}
+.image-container{
+  display: flex;
+  justify-content: space-evenly;
+  flex-direction: row;
+  width: 70%;
+}
+
+h3 {
+  text-align: center;
+}
+
+.btn {
+  display: flex;
+  justify-content: space-between;
+}
+
+.btn-approve {
+  flex: 1;
+  padding: 10px;
+  margin: 2px;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  color: white;
+  background-color: rgb(0, 165, 115);
+  border-radius: 5px 5px 0 0;
+  transition: all 0.3s ease-in-out;
+}
+.btn-approve:hover {
+  background-color: rgb(4, 101, 72);
+  transition: all 0.3s ease-in-out;
+}
+.btn-remove {
+  flex: 1;
+  padding: 10px;
+  margin: 2px;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  color: white;
+  background-color: rgb(245, 2, 2);
+  border-radius: 5px 5px 0 0;
+  transition: all 0.3s ease-in-out;
+}
+
+.btn-remove:hover {
+
+  background-color: rgb(192, 1, 1);
+
+}
+
+img{
+  /* width: fit-content; */
+  max-width: 350px;
+  aspect-ratio: 1.5/1;
+}
+
+

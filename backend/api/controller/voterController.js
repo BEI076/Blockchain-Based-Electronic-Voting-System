@@ -13,7 +13,6 @@ module.exports = {
     const salt = genSaltSync(10);
     req.body.voter_address = uuidv4().split("-").join(salt).split(".").join("");
     req.body.voter_id = Math.floor(Math.random() * 900000) + 100000;
-    req.body.password = hashSync(req.body.password, salt);
     createVoter(req.body, (error, results) => {
       if (error) {
         console.log(error);

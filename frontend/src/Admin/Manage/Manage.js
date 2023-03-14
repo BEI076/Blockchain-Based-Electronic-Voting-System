@@ -6,55 +6,59 @@ import ManageVoter from "./ManageVoter";
 import { countVote, deleteVote } from "../../Api/ApiHandler";
 
 const Manage = (props) => {
-  const token = props.token;
+  const { token, loginState } = props;
+
   const logout = () => {
-    props.loginState(false);
+    loginState(false);
   };
 
   const publish = (e) => {
-    deleteVote(token).then((response) => {
-      // console.log("votes cleared");
-      sessionStorage.setItem("refreshData", Math.random());
-    });
-    countVote(token).then((response) => {
-      // console.log(response.data);
-      sessionStorage.setItem("refreshData", Math.random());
-      console.log("Votes Published");
-
-    });
+    deleteVote(token)
+      .then((response) => {
+        console.log("Votes cleared");
+        sessionStorage.setItem("refreshData", Math.random());
+      })
+      .then(() => {
+        countVote(token)
+          .then((response) => {
+            console.log("Votes published");
+            sessionStorage.setItem("refreshData", Math.random());
+          });
+      });
   };
 
   const clear = (e) => {
     deleteVote(token).then((response) => {
-      console.log("votes cleared");
+      console.log("Votes cleared");
       sessionStorage.setItem("refreshData", Math.random());
     });
   };
+
   return (
     <div>
-      <button onClickCapture={logout} type="submit">
+      <button onClick={logout} type="submit">
         Logout
       </button>
-      <button onClickCapture={publish} className="publish-btn" type="submit">
+      <button onClick={publish} className="publish-btn" type="submit">
         Publish Vote
       </button>
-      <button onClickCapture={clear} className="clear-btn" type="submit">
+      <button onClick={clear} className="clear-btn" type="submit">
         Clear Vote
       </button>
-      <div class="container-item">
+      <div className="container-item">
         <h2>Manage Party</h2>
         <ManageParty token={token} />
       </div>
 
-      <div class="container-item">
+      <div className="container-item">
         <h2>Manage Category</h2>
         <ManageCategory token={token} />
       </div>
-      <div class="container-item">
+      <div className="container-item">
         <h2>Manage Candidate</h2>
         <ManageCandidate token={token} />
       </div>
-      <div class="container-item">
+      <div className="container-item">
         <h2>Manage Voter</h2>
         <ManageVoter token={token} />
       </div>

@@ -19,8 +19,6 @@ const RegisterCandidate = (props) => {
   const refreshData = sessionStorage.getItem("refreshData");
   // const refreshDelete = sessionStorage.getItem("delete");
 
-  
-
   // fetching Categories and
   useEffect(() => {
     getParty(token).then((response) => {
@@ -65,7 +63,7 @@ const RegisterCandidate = (props) => {
   return (
     <>
       <form onSubmit={submitHandler}>
-        <label for="full-name">Full Name:</label>
+        <label htmlFor="full-name">Full Name:</label>
         <input
           type="text"
           id="full-name"
@@ -75,7 +73,7 @@ const RegisterCandidate = (props) => {
           value={name}
           required
         />
-        <label for="address">Address:</label>
+        <label htmlFor="address">Address:</label>
         <input
           type="text"
           id="address"
@@ -85,7 +83,7 @@ const RegisterCandidate = (props) => {
           value={address}
           required
         />
-        <label for="citizenshipId">Citizenship ID:</label>
+        <label htmlFor="citizenshipId">Citizenship ID:</label>
         <input
           type="number"
           id="citizenshipId"
@@ -95,7 +93,7 @@ const RegisterCandidate = (props) => {
           value={citizenshipId}
           required
         />
-        <label for="dob">Date of birth</label>
+        <label htmlFor="dob">Date of birth:</label>
         <input
           type="date"
           id="dob"
@@ -105,45 +103,49 @@ const RegisterCandidate = (props) => {
           value={dob}
           required
         />
-        <label for="category">Category:</label>
-        <select
-          name="category"
-          id="category"
-          onClick={(e) => setCategory(e.target.value)}
-        >
-          <option value="null" hidden selected disabled>
-            Choose Category
-          </option>
-          {categoryData.map((item) => {
-            return (
-              <option key={item.c_id} value={item.c_id}>
-                {item.name}
-              </option>
-            );
-          })}
-        </select>
-        <label for="party">Party:</label>
-
-        <select
-          name="party"
-          id="party"
-          onClick={(e) => setParty(e.target.value)}
-        >
-          <option value="null" hidden selected disabled>
-            Choose Party
-          </option>
-          {partyData.map((item) => {
-            return (
-              <option key={item.p_id} value={item.p_id}>
-                {item.name}
-              </option>
-            );
-          })}
-        </select>
-
+        <label htmlFor="category">Category:</label>
+        <label>
+          <select
+            name="category"
+            id="category"
+            onChange={(e) => setCategory(e.target.value)}
+          >
+            <option value="" disabled selected>
+              Choose Category
+            </option>
+            {categoryData.map((item) => {
+              return (
+                <option key={item.c_id} value={item.c_id}>
+                  {item.name}
+                </option>
+              );
+            })}
+          </select>
+        </label>
+        <label htmlFor="party">Party:</label>
+        <label>
+          <select
+            name="party"
+            id="party"
+            onChange={(e) => setParty(e.target.value)}
+          >
+            <option value="" disabled selected>
+              Choose Party
+            </option>
+            {partyData.map((item) => {
+              return (
+                <option key={item.p_id} value={item.p_id}>
+                  {item.name}
+                </option>
+              );
+            })}
+          </select>
+        </label>
         <button type="submit">Add Candidate</button>
       </form>
-      <div class="alert">{alert}</div>
+      <div className="alert" aria-live="polite">
+        {alert}
+      </div>
     </>
   );
 };

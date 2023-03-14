@@ -5,6 +5,7 @@ const ManageAdmin = (props) => {
   const [adminData, setAdminData] = useState([]);
   const [refresh, setRefresh] = useState();
   const token = props.token;
+
   useEffect(() => {
     getAdmin(token).then((response) => {
       try {
@@ -16,9 +17,8 @@ const ManageAdmin = (props) => {
     });
   }, [token, refresh]);
 
-  const deleteHandler = (e) => {
-    // console.log(e.target.value);
-    deleteAdmin(e.target.value, token).then((response) => {
+  const handleDelete = (id) => {
+    deleteAdmin(id, token).then((response) => {
       console.log(response);
       setRefresh(Math.random());
     });
@@ -26,7 +26,7 @@ const ManageAdmin = (props) => {
 
   return (
     <div className="admin_container">
-      <table class="styled-table">
+      <table className="styled-table">
         <thead>
           <tr>
             <th>Admin</th>
@@ -34,17 +34,16 @@ const ManageAdmin = (props) => {
           </tr>
         </thead>
         <tbody>
-          {adminData.map((item) => {
-            return (
-              <tr>
-                <td>{item.username}</td>
-                <button onClick={deleteHandler} value={item.a_id} type="submit">
+          {adminData.map((item) => (
+            <tr key={item.a_id}>
+              <td>{item.username}</td>
+              <td>
+                <button onClick={() => handleDelete(item.a_id)} type="submit">
                   Delete
                 </button>
-              </tr>
-            );
-          })}
-          <tr></tr>
+              </td>
+            </tr>
+          ))}
         </tbody>
       </table>
     </div>

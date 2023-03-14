@@ -1,25 +1,24 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { getCategory } from "../../Api/ApiHandler";
 import Category from "../../components/Category";
-const ManageCategory = (props) => {
-  const token = props.token;
-  const [categoryData, setCategoryData] = useState([]);
-  const [refresh, setRefresh] = useState("");
 
+const ManageCategory = ({ token }) => {
+  const [categoryData, setCategoryData] = useState([]);
+  const [refresh, setRefresh] = useState(false);
   const refreshData = sessionStorage.getItem("refreshData");
+
+  const refreshHandler = useCallback((data) => {
+    setRefresh(data);
+  }, []);
 
   useEffect(() => {
     getCategory(token).then((response) => {
       setCategoryData(response.data);
     });
-  }, [token, refresh,refreshData ]);
-
-  const refreshHandler = (data) => {
-    setRefresh(data);
-  };
+  }, [token, refresh, refreshData]);
 
   return (
-    <table class="styled-table">
+    <table className="styled-table">
       <thead>
         <tr>
           <th>S.N</th>
@@ -28,17 +27,17 @@ const ManageCategory = (props) => {
         </tr>
       </thead>
       <tbody>
-        {categoryData.map((item) => {
-          return (
-            <Category
-              token={token}
-              refreshHandler={refreshHandler}
-              item={item}
-            />
-          );
-        })}
+        {categoryData.map((item) => (
+          <Category
+            key={item.cat_id}
+            token={token}
+            refreshHandler={refreshHandler}
+            item={item}
+          />
+        ))}
       </tbody>
     </table>
   );
 };
+
 export default ManageCategory;
