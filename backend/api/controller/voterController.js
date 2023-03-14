@@ -13,7 +13,6 @@ module.exports = {
     const salt = genSaltSync(10);
     req.body.voter_address = uuidv4().split("-").join(salt).split(".").join("");
     req.body.voter_id = Math.floor(Math.random() * 900000) + 100000;
-    req.body.password = hashSync(req.body.password, salt);
     createVoter(req.body, (error, results) => {
       if (error) {
         console.log(error);
@@ -47,6 +46,24 @@ module.exports = {
   },
 
   getVoterByEmail: (req, res) => {
+    getVoterByEmail(req.body.email, (error, results) => {
+      if (error) {
+        return res.status(500).json({
+          success: 0,
+          message: "Database connection failed",
+          status: false,
+        });
+      }
+
+      return res.status(200).json({
+        success: 1,
+        data: results,
+        status: true,
+      });
+    });
+  },
+
+  getAd: (req, res) => {
     getVoterByEmail(req.body.email, (error, results) => {
       if (error) {
         return res.status(500).json({

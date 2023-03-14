@@ -1,22 +1,42 @@
 import { useState } from "react";
-import { createVoter } from "../../Api/ApiHandler";
+import { getVoterByEmail, sotreData } from "../../Api/ApiHandler";
 const Register = (props) => {
-  // defining states
   const [name, setName] = useState("");
   const [address, setAddress] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [dob, setDob] = useState(new Date());
+  const [dob, setDob] = useState(new Date().toISOString(0, 10));
   const [citizenshipId, setCitizenshipId] = useState("");
   const [alert, setAlert] = useState("");
   const [buttonState, setButtonState] = useState(false);
+  const [frontImage, setFrontImage] = useState(null);
+  const [backImage, setBackImage] = useState(null);
 
-  // age restriction function
+  const handleFrontImageChange = (e) => {
+    setFrontImage(e.target.files[0]);
+  };
+
+  const handleBackImageChange = (e) => {
+    setBackImage(e.target.files[0]);
+  };
+
+  const multipleVoterHandler = (e) => {
+    setEmail(e.target.value);
+    getVoterByEmail(e.target.value).then(({ data }) => {
+      try {
+        if (data.email === e.target.value) {
+          setAlert("Voter Already Registered");
+        }
+      } catch {
+        setAlert("");
+      }
+    });
+  };
+
   const dobRestrictionHandler = (e) => {
     setDob(e.target.value);
-    console.log(e.target.value);
     const today = new Date();
-    const birthDate = new Date(dob);
+    const birthDate = new Date(e.target.value);
     let age = today.getFullYear() - birthDate.getFullYear();
     const monthDiff = today.getMonth() - birthDate.getMonth();
     if (
@@ -27,31 +47,38 @@ const Register = (props) => {
     }
     if (age < 18) {
       setAlert("You must be at least 18 years old to register to vote.");
-      console.log("You must be at least 18 years old to register to vote.");
       setButtonState(false);
-
-      return;
     } else {
       setButtonState(true);
       setAlert("");
-      return;
     }
   };
 
-  //   register function
   const register = (e) => {
     e.preventDefault();
-    createVoter(name, address, email, citizenshipId, dob, password).then(
-      (response) => {
-        setAlert(response.message);
-      }
-    );
+    const formData = new FormData();
+    formData.append("name", name);
+    formData.append("address", address);
+    formData.append("email", email);
+    formData.append("password", password);
+    formData.append("citizenshipId", citizenshipId);
+    formData.append("dob", dob);
+    formData.append("frontImage", frontImage);
+    formData.append("backImage", backImage);
+
+    sotreData(formData).then((response) => {
+      console.log(response);
+    });
+
     setName("");
     setEmail("");
     setAddress("");
-    setDob("");
+    setDob(new Date().toISOString(0, 10));
     setPassword("");
+    setFrontImage(null);
+    setBackImage(null);
   };
+
   return (
     <>
       <form onSubmit={register}>
@@ -81,7 +108,7 @@ const Register = (props) => {
           id="email"
           name="email"
           placeholder="Enter your email address"
-          onChange={(e) => setEmail(e.target.value)}
+          onChange={multipleVoterHandler}
           value={email}
           required
         />
@@ -96,6 +123,39 @@ const Register = (props) => {
           value={citizenshipId}
           required
         />
+        <div class="image">
+          <label htmlFor="front-image">Front Image:</label>
+          <input
+            type="file"
+            id="front-image"
+            accept="image/*"
+            enctype="multipart/form-data"
+            onChange={handleFrontImageChange}
+          />
+          {frontImage && (
+            <img
+              src={URL.createObjectURL(frontImage)}
+              alt="frontimage"
+              width="300"
+            />
+          )}
+
+          <label htmlFor="back-image">Back Image:</label>
+          <input
+            type="file"
+            id="back-image"
+            accept="image/*"
+            enctype="multipart/form-data"
+            onChange={handleBackImageChange}
+          />
+          {backImage && (
+            <img
+              src={URL.createObjectURL(backImage)}
+              alt="backimage"
+              width="300"
+            />
+          )}
+        </div>
 
         <label for="dob">Date of Birth:</label>
         <input

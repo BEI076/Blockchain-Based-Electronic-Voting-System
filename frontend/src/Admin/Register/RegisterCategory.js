@@ -2,25 +2,29 @@ import { useState } from "react";
 import { createCategory } from "../../Api/ApiHandler";
 
 const RegisterCategory = (props) => {
-  const token = props.token;
+  const { token } = props;
 
-  // defining state
   const [name, setName] = useState("");
   const [alert, setAlert] = useState("");
+  const [error, setError] = useState(null);
 
   const submitHandler = (e) => {
     e.preventDefault();
-    createCategory(name, token).then((response) => {
-      setAlert(response.message);
-      setName("");
-      sessionStorage.setItem("refreshData", Math.random());
-
-    });
+    createCategory(name, token)
+      .then((response) => {
+        setAlert(response.message);
+        setName("");
+        sessionStorage.setItem("refreshData", Math.random());
+      })
+      .catch((error) => {
+        setError(error.message);
+      });
   };
+
   return (
     <>
       <form onSubmit={submitHandler}>
-        <label for="text">Category:</label>
+        <label htmlFor="category">Category:</label>
         <input
           type="text"
           id="category"
@@ -32,8 +36,10 @@ const RegisterCategory = (props) => {
         />
         <button type="submit">Add Category</button>
       </form>
-      <div class="alert">{alert}</div>
+      {error && <div class="error">{error}</div>}
+      {alert && <div class="alert">{alert}</div>}
     </>
   );
 };
+
 export default RegisterCategory;

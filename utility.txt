@@ -3,3 +3,16 @@ npm install --save-dev jsonwebtoken bcrypt body-parser cors dotenv express mysql
 npm list --depth=0
 npm list --depth=0 > requirements.txt
 npm install --save-exact --save-dev < requirements.txt
+
+
+1st:
+go to sql root
+
+
+create user 'anil'@'%' identified by 'anil@0403';  
+
+grant all  privileges on *.* to 'anil'@'%'; 
+
+flush privileges; 
+
+alter user 'root'@'localhost' identified with mysql_native_password by 'anil@0403'

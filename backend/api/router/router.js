@@ -35,7 +35,11 @@ const {
   deletePartyById,
 } = require("../controller/partyController");
 
-const { createAdmin } = require("../controller/adminController");
+const {
+  createAdmin,
+  deleteAdmin,
+  getAdmin,
+} = require("../controller/adminController");
 
 const { login } = require("../../auth/adminLoginController");
 
@@ -44,6 +48,12 @@ const { userLogin } = require("../../auth/userLoginController");
 const { adminCheckToken } = require("../../auth/adminTokenValidation");
 
 const { userCheckToken } = require("../../auth/userTokenValidation");
+
+const {
+  storeRawSData,
+  getRawData,
+  updateRawData,
+} = require("../controller/rawVoterDataController");
 
 // router for category
 
@@ -70,7 +80,7 @@ router.get("/get-full-candidate", adminCheckToken, getFullCandidate);
 router.post("/create-voter", createVoter);
 router.get("/get-voter", adminCheckToken, userCheckToken, getVoter);
 router.delete("/delete-voter", adminCheckToken, deleteVoter);
-router.post("/get-voter-by-email", userCheckToken, getVoterByEmail);
+router.post("/get-voter-by-email", getVoterByEmail);
 router.patch(
   "/update-voter-by-voter-address",
   userCheckToken,
@@ -89,11 +99,18 @@ router.delete("/delete-party", adminCheckToken, deletePartyById);
 
 // admin
 router.post("/create-admin", createAdmin);
- 
+router.delete("/delete-admin", adminCheckToken, deleteAdmin);
+router.get("/get-admin", adminCheckToken, getAdmin);
+
 //admin login
 router.post("/admin-login", login);
 
 //user login
 router.post("/user-login", userLogin);
+
+// sote raw voter info
+router.post("/store-raw-voter", storeRawSData);
+router.get("/get-raw-data", adminCheckToken, getRawData);
+router.patch("/update-raw-data", adminCheckToken, updateRawData);
 
 module.exports = router;

@@ -1,5 +1,6 @@
 import axios from "axios";
-const baseurl = "http://192.168.1.120:3001";
+
+const baseurl = process.env.REACT_APP_API_URL;
 
 // admin login
 export const adminLogin = async (username, password) => {
@@ -33,6 +34,35 @@ export const createAdmin = async (username, password, token) => {
   });
 };
 
+// get admin
+export const getAdmin = async (token) => {
+  console.log(token);
+  return await axios({
+    method: "GET",
+    url: baseurl + "/get-admin",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }).then((response) => {
+    return response.data;
+  });
+};
+// delete admin
+export const deleteAdmin = async (id, token) => {
+  console.log(token);
+  return await axios({
+    method: "DELETE",
+    url: baseurl + "/delete-admin",
+    data: {
+      id: id,
+    },
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }).then((response) => {
+    return response.data;
+  });
+};
 // create party
 export const createParty = async (name, token) => {
   return await axios({
@@ -253,16 +283,13 @@ export const getVoter = async (token) => {
 // };
 
 // get voter by email
-export const getVoterByEmail = async (email, token) => {
+export const getVoterByEmail = async (email) => {
   return await axios({
     method: "POST",
     url: baseurl + "/get-voter-by-email",
     responseType: "json",
     data: {
       email: email,
-    },
-    headers: {
-      Authorization: `Bearer ${token}`,
     },
   }).then((response) => {
     console.log(response.data);
@@ -406,16 +433,46 @@ export const getNetworkNodes = async (token) => {
   });
 };
 
-// export const getVoter = async (token) => {
-//   return await axios({
-//     method: "GET",
-//     url: baseurl + "/get-voter",
-//     responseType: "json",
+//
+export const sotreData = async (formData) => {
+  // console.log(formData);
+  return await axios({
+    method: "POST",
+    url: baseurl + "/store-raw-voter",
+    responseType: "json",
+    data: formData,
+  }).then((response) => {
+    return response.data;
+  });
+};
 
-//     headers: {
-//       Authorization: `Bearer ${token}`,
-//     },
-//   }).then((response) => {
-//     return response.data;
-//   });
-// };
+export const getRawData = async (token) => {
+  // console.log(formData);
+  return await axios({
+    method: "GET",
+    url: baseurl + "/get-raw-data",
+    responseType: "json",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "image/png",
+    },
+  }).then((response) => {
+    return response.data;
+  });
+};
+
+export const updateRawData = async (v_id, token) => {
+  return await axios({
+    method: "PATCH",
+    url: baseurl + "/update-raw-data",
+    data: {
+      v_id: v_id,
+    },
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    responseType: "json",
+  }).then((response) => {
+    return response.data;
+  });
+};

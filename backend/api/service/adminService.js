@@ -26,4 +26,26 @@ module.exports = {
       }
     );
   },
+  getAdmin: (callBack = () => {}) => {
+    pool.query(` SELECT * FROM Admin`, [], (error, results, field) => {
+      if (error) {
+        console.log(error);
+        callBack(error);
+      }
+      return callBack(null, results);
+    });
+  },
+  deleteAdmin: (id, callBack = () => {}) => {
+    pool.query(
+      `DELETE FROM Admin WHERE a_id = ?`,
+      [id],
+      (error, results, field) => {
+        if (error) {
+          console.log(error);
+          callBack(error);
+        }
+        return callBack(null, results);
+      }
+    );
+  },
 };

@@ -5,15 +5,8 @@
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "node_1": "nodemon  app.js 3001 http://192.168.1.120:3001",
-    "node_2": "nodemon  app.js 3002 http://192.168.1.120:3002",
-    "node_3": "nodemon  app.js 3003 http://192.168.1.120:3003",
-    "node_4": "nodemon --watch dev -e js app.js 3004 http://localhost:3004",
-    "node_5": "nodemon --watch dev -e js app.js 3005 http://localhost:3005",
-    "node_6": "nodemon --watch dev -e js app.js 3006 http://localhost:3006",
-    "node_7": "nodemon --watch dev -e js app.js 3007 http://localhost:3007",
-    "node_8": "nodemon --watch dev -e js app.js 3008 http://localhost:3008",
-    "node_9": "nodemon --watch dev -e js app.js 3009 http://localhost:3009"
+    "node_1": "nodemon  app.js 3001 http://192.168.1.67:3001",
+    "node_2": "nodemon  app.js 3002 http://192.168.1.67:3002"
   },
   "keywords": [],
   "author": "",
@@ -32,6 +25,8 @@
     "uuidv4": "^6.2.13"
   },
   "dependencies": {
-    "async-mutex": "^0.4.0"
+    "async-mutex": "^0.4.0",
+    "multer": "^1.4.5-lts.1",
+    "mysql2": "^3.2.0"
   }
 }

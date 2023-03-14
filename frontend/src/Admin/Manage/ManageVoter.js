@@ -1,19 +1,21 @@
 import { useState, useEffect } from "react";
 import { getVoter } from "../../Api/ApiHandler";
 import Voter from "../../components/Voter";
+
 const ManageVoter = (props) => {
-  // defining states
   const [voterData, setVoterData] = useState([]);
   const [refresh, setRefresh] = useState("");
-
   const refreshData = sessionStorage.getItem("refreshData");
-
-
   const token = props.token;
+
   useEffect(() => {
-    getVoter(token).then((response) => {
-      setVoterData(response.data);
-    });
+    getVoter(token)
+      .then((response) => {
+        setVoterData(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   }, [token, refresh, refreshData]);
 
   const refreshHandler = (refreshData) => {
@@ -21,7 +23,7 @@ const ManageVoter = (props) => {
   };
 
   return (
-    <table class="styled-table">
+    <table className="styled-table">
       <thead>
         <tr>
           <th>S.N</th>
@@ -33,11 +35,14 @@ const ManageVoter = (props) => {
         </tr>
       </thead>
       <tbody>
-        {voterData.map((item) => {
-          return (
-            <Voter item={item} token={token} refreshHandler={refreshHandler} />
-          );
-        })}
+        {voterData.map((item) => (
+          <Voter
+            key={item.id}
+            item={item}
+            token={token}
+            refreshHandler={refreshHandler}
+          />
+        ))}
       </tbody>
     </table>
   );

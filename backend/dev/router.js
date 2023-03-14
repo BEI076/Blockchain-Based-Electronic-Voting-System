@@ -33,7 +33,7 @@ router.post("/register-nodes-bulk", adminCheckToken, registerNodesBulk);
 router.get("/consensus", consensus);
 
 // return network nodes
-router.get("/get-network-nodes", returnNodesUrl);
+router.get("/get-network-nodes", adminCheckToken, returnNodesUrl);
 
 //count vote
 router.get("/count-vote", adminCheckToken, countVote);

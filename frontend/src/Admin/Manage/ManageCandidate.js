@@ -1,30 +1,24 @@
 import { getFullCandidate } from "../../Api/ApiHandler";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import Candidate from "../../components/Candidate";
 
-const ManageCandidate = (props) => {
-  const token = props.token;
-
-  // defining state
+const ManageCandidate = ({ token }) => {
   const [candidateData, setCandidateData] = useState([]);
-  const [refresh, setRefresh] = useState("");
+  const [refresh, setRefresh] = useState(false);
   const refreshData = sessionStorage.getItem("refreshData");
+
+  const refreshHandler = useCallback((refreshData) => {
+    setRefresh(refreshData);
+  }, []);
 
   useEffect(() => {
     getFullCandidate(token).then((response) => {
-      // console.log("candidate data: ");
-      // console.log(response.data);
       setCandidateData(response.data);
     });
   }, [token, refresh, refreshData]);
 
-  const refreshHnadler = (refreshData) => {
-    console.log("triggered");
-    setRefresh(refreshData);
-  };
-
   return (
-    <table class="styled-table">
+    <table className="styled-table">
       <thead>
         <tr>
           <th>S.N</th>
@@ -37,18 +31,17 @@ const ManageCandidate = (props) => {
         </tr>
       </thead>
       <tbody>
-        {candidateData.map((item) => {
-          return (
-            <Candidate
-              key={item.ca_id}
-              item={item}
-              refreshHnadler={refreshHnadler}
-              token={token}
-            />
-          );
-        })}
+        {candidateData.map((item) => (
+          <Candidate
+            key={item.ca_id}
+            item={item}
+            refreshHandler={refreshHandler}
+            token={token}
+          />
+        ))}
       </tbody>
     </table>
   );
 };
+
 export default ManageCandidate;

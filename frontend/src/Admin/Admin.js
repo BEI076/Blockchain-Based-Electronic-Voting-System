@@ -5,6 +5,7 @@ import AdminLogin from "./AdminLogin";
 import RegisterAdmin from "./Register/RegisterAdmin";
 import Result from "./Result";
 import NodeManage from "./NodeManage";
+import VoterVerification from "./VoterVerification";
 
 const Admin = () => {
   // defining states
@@ -73,6 +74,13 @@ const Admin = () => {
             >
               Register
             </button>
+            {/* voter verification */}
+            <button
+              className={`tab ${activeTab === "verify" ? "active" : ""}`}
+              onClick={() => showForm("verify")}
+            >
+              Voter verification
+            </button>
 
             {/* vote result */}
             <button
@@ -119,6 +127,13 @@ const Admin = () => {
             className={`form-content ${activeTab === "node" ? "active" : ""}`}
           >
             <NodeManage token={token} />
+          </div>
+          {/* voter verification */}
+          <div
+            id="verify-form"
+            className={`form-content ${activeTab === "verify" ? "active" : ""}`}
+          >
+            <VoterVerification token={token} />
           </div>
         </div>
       )}

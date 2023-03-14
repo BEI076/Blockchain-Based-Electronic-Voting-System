@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { createAdmin } from "../../Api/ApiHandler";
+import ManageAdmin from "../Manage/ManageAdmin";
 
 const RegisterAdmin = (props) => {
   const token = props.token;
@@ -7,24 +8,27 @@ const RegisterAdmin = (props) => {
   // defining states
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [alert, setAlert] = useState("");
+  const [message, setMessage] = useState("");
 
   // submit handler function
   const submitHandler = (e) => {
     e.preventDefault();
-    createAdmin(username, password, token).then((response) => {
-      // console.log(response.message);
-      setAlert(response.message);
-      setUsername("");
-      setPassword("");
-      sessionStorage.setItem("refreshData", Math.random());
-    });
+    createAdmin(username, password, token)
+      .then((response) => {
+        setMessage(response.message);
+        setUsername("");
+        setPassword("");
+        sessionStorage.setItem("refreshData", Math.random());
+      })
+      .catch((error) => {
+        setMessage(error.message);
+      });
   };
 
   return (
     <div className="form-container">
       <form onSubmit={submitHandler}>
-        <label for="username">Username:</label>
+        <label htmlFor="username">Username:</label>
         <input
           type="text"
           id="username"
@@ -35,7 +39,7 @@ const RegisterAdmin = (props) => {
           required
         />
 
-        <label for="text">Password:</label>
+        <label htmlFor="password">Password:</label>
         <input
           type="password"
           id="password"
@@ -47,8 +51,10 @@ const RegisterAdmin = (props) => {
         />
         <button type="submit">Add Admin</button>
       </form>
-      <div class="alert">{alert}</div>
+      {message && <div className="alert">{message}</div>}
+      <ManageAdmin token={token} />
     </div>
   );
 };
+
 export default RegisterAdmin;
