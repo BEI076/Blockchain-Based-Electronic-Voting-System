@@ -146,59 +146,61 @@ module.exports = {
 
   // the current node recieve new node, register it and broadcast to all the nodes of the network
   registerBroadcast: (data, callBack = () => {}) => {
-    console.log("RESISTER AND BRAODCASET");
-    console.log(`data =  ${data}`);
-    // const newNodeUrl = data.newNodeUrl;
-    // const token = data.token;
-    // if (coin.networkNodes.indexOf(newNodeUrl) == -1)
-    //   coin.networkNodes.push(newNodeUrl);
-    // const regNodesPromises = [];
-    // coin.networkNodes.forEach((networkNodeUrl) => {
-    //   const requestOptions = {
-    //     uri: networkNodeUrl + "/register-node",
-    //     method: "POST",
-    //     body: { newNodeUrl: newNodeUrl },
-    //     headers: {
-    //       Authorization: `Bearer ${token}`,
-    //     },
-    //     json: true,
-    //   };
-    //   regNodesPromises.push(rp(requestOptions));
-    // });
-    // Promise.all(regNodesPromises)
-    //   .then((data) => {
-    //     const bulkRegisterOptions = {
-    //       uri: newNodeUrl + "/register-nodes-bulk",
-    //       method: "POST",
-    //       body: {
-    //         allNetworkNodes: [...coin.networkNodes, coin.currentNodeUrl],
-    //       },
-    //       headers: {
-    //         Authorization: `Bearer ${token}`,
-    //       },
-    //       json: true,
-    //     };
-    //     return rp(bulkRegisterOptions);
-    //   })
-    //   .then((data) => {
-    //     // implmementing consensus algorithm
-    //     // const nodeConsensusResponse = [];
-    //     // coin.networkNodes.forEach((nodeUrl) => {
-    //     //   const nodeConsensus = {
-    //     //     uri: nodeUrl + "/consensus",
-    //     //     method: "get",
-    //     //     json: true,
-    //     //   };
-    //     //   nodeConsensusResponse.push(rp(nodeConsensus));
-    //     // });
-    //     // Promise.all(nodeConsensusResponse).then((data) => {
-    //     //   console.log("");
-    //     // });
+    const newNodeUrl = data.newNodeUrl;
+    const token = data.token;
 
-    //     return callBack(null, {
-    //       note: "new node registered in network successfully !",
-    //     });
+    if (coin.networkNodes.indexOf(newNodeUrl) == -1)
+      coin.networkNodes.push(newNodeUrl);
+    const regNodesPromises = [];
+    coin.networkNodes.forEach((networkNodeUrl) => {
+      const requestOptions = {
+        uri: networkNodeUrl + "/register-node",
+        method: "POST",
+        body: { newNodeUrl: newNodeUrl },
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        json: true,
+      };
+      regNodesPromises.push(rp(requestOptions));
+    });
+    Promise.all(regNodesPromises).then((data) => {
+      console.log(data);
+    });
+    return callBack(null, {
+      allNetworkNodes: [...coin.networkNodes, coin.currentNodeUrl],
+      // const bulkRegisterOptions = {
+      //   uri: newNodeUrl + "/register-nodes-bulk",
+      //   method: "POST",
+      //   body: {
+      //     allNetworkNodes: [...coin.networkNodes, coin.currentNodeUrl],
+      //   },
+      //   headers: {
+      //     Authorization: `Bearer ${token}`,
+      //   },
+      //   json: true,
+      // };
+      // return rp(bulkRegisterOptions);
+    });
+    // .then((data) => {
+    //   // implmementing consensus algorithm
+    //   // const nodeConsensusResponse = [];
+    //   // coin.networkNodes.forEach((nodeUrl) => {
+    //   //   const nodeConsensus = {
+    //   //     uri: nodeUrl + "/consensus",
+    //   //     method: "get",
+    //   //     json: true,
+    //   //   };
+    //   //   nodeConsensusResponse.push(rp(nodeConsensus));
+    //   // });
+    //   // Promise.all(nodeConsensusResponse).then((data) => {
+    //   //   console.log("");
+    //   // });
+
+    //   return callBack(null, {
+    //     note: "new node registered in network successfully !",
     //   });
+    // });
   },
 
   // all the nodes of the network receive new node, register it and return their details
@@ -344,6 +346,10 @@ module.exports = {
     const registerNodeResponse = rp(registerNode);
     Promise.resolve(registerNodeResponse).then((response) => {
       console.log(response);
+      const allNetworkNodes = response.data.allNetworkNodes;
+      console.log(allNetworkNodes);
+      coin.networkNodes.push(allNetworkNodes);
+      //
       //
     });
   },
