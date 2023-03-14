@@ -146,8 +146,8 @@ module.exports = {
 
   // the current node recieve new node, register it and broadcast to all the nodes of the network
   registerBroadcast: (data, callBack = () => {}) => {
-    // console.log("RESISTER AND BRAODCASET")
-    // console.log(`data =  ${data}`);
+    console.log("RESISTER AND BRAODCASET");
+    console.log(`data =  ${data}`);
     // const newNodeUrl = data.newNodeUrl;
     // const token = data.token;
     // if (coin.networkNodes.indexOf(newNodeUrl) == -1)
@@ -330,15 +330,12 @@ module.exports = {
   boradcast: (data, callBack = () => {}) => {
     const newNodeUrl = data.newNodeUrl;
     const token = data.token;
-    // console.log(data);
+    console.log(data);
     // register braodcast
     const registerNode = {
       uri: newNodeUrl + "/register-and-broadcast-node",
       method: "POST",
-      body: {
-        newNodeUrl: coin.currentNodeUrl,
-        token: token,
-      },
+      body: data,
       headers: {
         Authorization: `Bearer ${token}`,
       },
