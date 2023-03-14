@@ -347,8 +347,13 @@ module.exports = {
     Promise.resolve(registerNodeResponse).then((response) => {
       console.log(response);
       const allNetworkNodes = response.data.allNetworkNodes;
-      console.log(allNetworkNodes);
-      coin.networkNodes.push(allNetworkNodes);
+      allNetworkNodes.forEach((networkNodeUrl) => {
+        const nodeNotAlreadyPresent =
+          coin.networkNodes.indexOf(networkNodeUrl) == -1;
+        const notCurrentNode = coin.currentNodeUrl !== networkNodeUrl;
+        if (nodeNotAlreadyPresent && notCurrentNode)
+          coin.networkNodes.push(networkNodeUrl);
+      });
       //
       //
     });
