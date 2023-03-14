@@ -23,7 +23,7 @@ module.exports = {
         const jsontoken = sign({ result: results }, "qwe1234", {
           expiresIn: "1h",
         });
-        console.log(jsontoken);
+        // console.log(jsontoken);
         return res.json({
           success: 1,
           message: "login successfully",

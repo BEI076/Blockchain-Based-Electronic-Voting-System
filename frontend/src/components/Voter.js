@@ -16,7 +16,7 @@ const Voter = (props) => {
       <td>{item.address}</td>
       <td>{item.email}</td>
       <td>{item.dob.substring(0,10)}</td>
-      <td class="action" onClickCapture={deleteHandler}>
+      <td className="action" onClickCapture={deleteHandler}>
         Delete
       </td>
     </tr>

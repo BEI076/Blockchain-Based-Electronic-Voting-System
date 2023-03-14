@@ -22,10 +22,12 @@ const RegisterCandidate = (props) => {
   // fetching Categories and
   useEffect(() => {
     getParty(token).then((response) => {
-      setPartyData(response.data);
+      setPartyData(response.data || []);
+
     });
     getCategory(token).then((response) => {
-      setCategoryData(response.data);
+      setCategoryData(response.data || []);
+
     });
   }, [token, refreshData]);
 
@@ -113,13 +115,14 @@ const RegisterCandidate = (props) => {
             <option value="" disabled selected>
               Choose Category
             </option>
-            {categoryData.map((item) => {
-              return (
-                <option key={item.c_id} value={item.c_id}>
-                  {item.name}
-                </option>
-              );
-            })}
+            {categoryData.length > 0 &&
+              categoryData.map((item) => {
+                return (
+                  <option key={item.c_id} value={item.c_id}>
+                    {item.name}
+                  </option>
+                );
+              })}
           </select>
         </label>
         <label htmlFor="party">Party:</label>
@@ -132,13 +135,14 @@ const RegisterCandidate = (props) => {
             <option value="" disabled selected>
               Choose Party
             </option>
-            {partyData.map((item) => {
-              return (
-                <option key={item.p_id} value={item.p_id}>
-                  {item.name}
-                </option>
-              );
-            })}
+            {partyData.length > 0 &&
+              partyData.map((item) => {
+                return (
+                  <option key={item.p_id} value={item.p_id}>
+                    {item.name}
+                  </option>
+                );
+              })}
           </select>
         </label>
         <button type="submit">Add Candidate</button>

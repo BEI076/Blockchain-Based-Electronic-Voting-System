@@ -33,7 +33,7 @@ const Vote = (props) => {
   useEffect(() => {
     getCategory(token).then((response) => {
       setCategoryData(response.data);
-      // console.log(response.data)
+      console.log(`category data = ${response.data}`);
     });
     getVoterByEmail(voterInfo.email).then((response) => {
       if (response.data.flag === 1) {
@@ -43,7 +43,7 @@ const Vote = (props) => {
         setButtonState(true);
       }
     });
-  }, [token, refreshData]);
+  }, [token, refreshData, voterInfo.email]);
 
   // vote data filter function
   const filterVoteDataHandler = (data) => {
@@ -63,9 +63,9 @@ const Vote = (props) => {
   // vote handler function
   const voteHandler = (e) => {
     e.preventDefault();
-    setButtonState(false)
+    setButtonState(false);
     const transaction = [];
-    filterVoteData.map((item) => {
+    filterVoteData.forEach((item) => {
       transaction.push({
         ...item,
         voter_address: voterInfo.voter_address,

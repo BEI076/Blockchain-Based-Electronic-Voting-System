@@ -13,7 +13,7 @@ const ManageCandidate = ({ token }) => {
 
   useEffect(() => {
     getFullCandidate(token).then((response) => {
-      setCandidateData(response.data);
+      setCandidateData(response.data || []);
     });
   }, [token, refresh, refreshData]);
 
@@ -31,14 +31,15 @@ const ManageCandidate = ({ token }) => {
         </tr>
       </thead>
       <tbody>
-        {candidateData.map((item) => (
-          <Candidate
-            key={item.ca_id}
-            item={item}
-            refreshHandler={refreshHandler}
-            token={token}
-          />
-        ))}
+        {candidateData.length > 0 &&
+          candidateData.map((item) => (
+            <Candidate
+              key={item.ca_id}
+              item={item}
+              refreshHandler={refreshHandler}
+              token={token}
+            />
+          ))}
       </tbody>
     </table>
   );

@@ -13,7 +13,7 @@ const ManageCategory = ({ token }) => {
 
   useEffect(() => {
     getCategory(token).then((response) => {
-      setCategoryData(response.data);
+      setCategoryData(response.data || []);
     });
   }, [token, refresh, refreshData]);
 
@@ -27,14 +27,15 @@ const ManageCategory = ({ token }) => {
         </tr>
       </thead>
       <tbody>
-        {categoryData.map((item) => (
-          <Category
-            key={item.cat_id}
-            token={token}
-            refreshHandler={refreshHandler}
-            item={item}
-          />
-        ))}
+        {categoryData.length > 0 &&
+          categoryData.map((item) => (
+            <Category
+              key={item.cat_id}
+              token={token}
+              refreshHandler={refreshHandler}
+              item={item}
+            />
+          ))}
       </tbody>
     </table>
   );

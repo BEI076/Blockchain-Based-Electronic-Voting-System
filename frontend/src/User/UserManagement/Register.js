@@ -129,7 +129,7 @@ const Register = (props) => {
             type="file"
             id="front-image"
             accept="image/*"
-            enctype="multipart/form-data"
+            encType="multipart/form-data"
             onChange={handleFrontImageChange}
           />
           {frontImage && (
@@ -145,7 +145,7 @@ const Register = (props) => {
             type="file"
             id="back-image"
             accept="image/*"
-            enctype="multipart/form-data"
+            encType="multipart/form-data"
             onChange={handleBackImageChange}
           />
           {backImage && (

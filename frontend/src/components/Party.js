@@ -14,7 +14,7 @@ const Party = (props) => {
     <tr>
       <td>{data.p_id}</td>
       <td>{data.name}</td>
-      <td class="action" onClickCapture={deleteHandler}>
+      <td className="action" onClickCapture={deleteHandler}>
         Delete
       </td>
     </tr>

@@ -12,7 +12,8 @@ const NodeManage = (props) => {
   useEffect(() => {
     getNetworkNodes(token)
       .then((response) => {
-        setNodes(response.data);
+        setNodes(response.data || []);
+        // setNodes(response.data);
       })
       .catch((error) => {
         console.error(error);
@@ -57,9 +58,7 @@ const NodeManage = (props) => {
       <div className="manage-node">
         <h3>Current Nodes In The Network</h3>
         <ul>
-          {nodes.map((node) => (
-            <li key={node}>{node}</li>
-          ))}
+          {nodes.length > 0 && nodes.map((node) => <li key={node}>{node}</li>)}
         </ul>
       </div>
     </div>

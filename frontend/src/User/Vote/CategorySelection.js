@@ -4,7 +4,6 @@ import { getFullCandidate } from "../../Api/ApiHandler";
 const CategorySelection = (props) => {
   const token = props.token;
   const item = props.item;
-  const category = props.category;
 
   const [candidateData, setCandidateData] = useState([]);
 
@@ -28,7 +27,6 @@ const CategorySelection = (props) => {
       party_name: party_name,
     };
     props.filterVoteData(voteObj);
-    
   };
 
   return (

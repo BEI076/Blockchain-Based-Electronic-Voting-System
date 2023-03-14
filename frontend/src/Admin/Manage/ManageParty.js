@@ -12,10 +12,9 @@ const ManageParty = (props) => {
 
   useEffect(() => {
     getParty(token).then((response) => {
-      setParties(response.data);
+      setParties(response.data || []);
     });
   }, [token, refresh, refreshData]);
-
   const refreshHandler = (data) => {
     setRefresh(data);
   };
@@ -30,14 +29,15 @@ const ManageParty = (props) => {
         </tr>
       </thead>
       <tbody>
-        {parties.map((party) => (
-          <Party
-            key={party.id}
-            data={party}
-            token={token}
-            refreshHandler={refreshHandler}
-          />
-        ))}
+        {parties.length > 0 &&
+          parties.map((party) => (
+            <Party
+              key={party.id}
+              data={party}
+              token={token}
+              refreshHandler={refreshHandler}
+            />
+          ))}
       </tbody>
     </table>
   );

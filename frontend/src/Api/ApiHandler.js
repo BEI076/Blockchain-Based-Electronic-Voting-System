@@ -349,6 +349,7 @@ export const userLogin = async (email, password) => {
 
 // transacation broadcast
 export const transactionBraodcast = async (transaction, token) => {
+  console.log(`transaction =  ${transaction}`);
   return await axios({
     method: "POST",
     url: baseurl + "/transaction-broadcast",

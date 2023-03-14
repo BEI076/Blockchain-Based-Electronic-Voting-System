@@ -1,5 +1,7 @@
 const sha256 = require("sha256"); //importing sha256 hashing
-const currentNodeUrl = process.argv[3];
+const currentNodeUrl = process.env.IP_ADDRESS_SERVER;
+// const currentNodeUrl = process.argv[3];
+
 const { v4: uuidv4 } = require("uuid");
 
 // defining blockcahin structure
@@ -84,7 +86,7 @@ Blockchain.prototype.proofOfWork = function (
 ) {
   let nonce = 0;
   let hash = this.hashBlock(previousBlockHash, currentBlockData, nonce);
-  while (hash.substring(0, 4) !== "0000") {
+  while (hash.substring(0, 2) !== "00") {
     nonce++;
     hash = this.hashBlock(previousBlockHash, currentBlockData, nonce);
   }
@@ -129,7 +131,6 @@ Blockchain.prototype.chainIsValid = function (blockchain) {
   return validChain;
 };
 
-
 // vote count
 Blockchain.prototype.voteCount = function (
   candidateName,
@@ -162,7 +163,7 @@ Blockchain.prototype.voteCount = function (
     candidate_name: name,
     candidate_address: candidate,
     category_name: category,
-    party_name: party
+    party_name: party,
   };
 };
 

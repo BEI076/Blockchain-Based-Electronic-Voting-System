@@ -11,7 +11,7 @@ const ManageVoter = (props) => {
   useEffect(() => {
     getVoter(token)
       .then((response) => {
-        setVoterData(response.data);
+        setVoterData(response.data || []);
       })
       .catch((error) => {
         console.error(error);
@@ -35,14 +35,15 @@ const ManageVoter = (props) => {
         </tr>
       </thead>
       <tbody>
-        {voterData.map((item) => (
-          <Voter
-            key={item.id}
-            item={item}
-            token={token}
-            refreshHandler={refreshHandler}
-          />
-        ))}
+        {voterData.length > 0 &&
+          voterData.map((item) => (
+            <Voter
+              key={item.id}
+              item={item}
+              token={token}
+              refreshHandler={refreshHandler}
+            />
+          ))}
       </tbody>
     </table>
   );

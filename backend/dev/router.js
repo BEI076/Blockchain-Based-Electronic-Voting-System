@@ -30,7 +30,7 @@ router.post("/register-node", adminCheckToken, registerNode);
 router.post("/register-nodes-bulk", adminCheckToken, registerNodesBulk);
 
 //block verification
-router.get("/consensus", consensus);
+router.get("/consensus",consensus);
 
 // return network nodes
 router.get("/get-network-nodes", adminCheckToken, returnNodesUrl);

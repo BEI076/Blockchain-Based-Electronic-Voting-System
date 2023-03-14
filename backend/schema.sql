@@ -48,6 +48,11 @@ CREATE TABLE Voter (
     PRIMARY KEY (v_id)
 );
 
+select * from voter;
+
+update voter 
+set flag = false
+where v_id = 19;
 
 SELECT * FROM candidate;
 SELECT * FROM candidate where p_id =1 and c_id = 2;
@@ -68,25 +73,19 @@ CREATE TABLE result (
 select * from result;
 
 CREATE TABLE verifyvoter (
-	v_id INT NOT NULL AUTO_INCREMENT,
-	name VARCHAR(255) NOT NULL,
-	address VARCHAR(255) NOT NULL,
-	email VARCHAR(255) NOT NULL,
-	password VARCHAR(255) NOT NULL,
-	citizenshipid BIGINT NOT NULL,
-	dob DATE NOT NULL,
-	frontImage VARCHAR(255) NOT NULL,
-	backImage VARCHAR(255) NOT NULL,
-    flag BOOLEAN NOT NULL DEFAULT false,
-	PRIMARY KEY (v_id)
+    v_id INT NOT NULL AUTO_INCREMENT,
+    name VARCHAR(255) NOT NULL,
+    address VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    citizenshipid BIGINT NOT NULL,
+    dob DATE NOT NULL,
+    password VARCHAR(255) NOT NULL,
+	front_image VARCHAR(255) NOT NULL,
+	back_image VARCHAR(255) NOT NULL,
+    PRIMARY KEY (v_id)
 );
 select * from verifyvoter;
-
-UPDATE verifyvoter
-SET flag = true
-WHERE V_id = 1;
 drop table verifyvoter;
-
 SELECT Candidate.ca_id, Candidate.name, Candidate.address,candidate.citizenshipid, candidate.dob, Category.name AS category_name, Party.name AS party_name
 FROM Candidate
 JOIN Category ON Candidate.c_id = Category.c_id

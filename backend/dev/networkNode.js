@@ -74,7 +74,7 @@ module.exports = {
     };
 
     mineRequestPromises.push(rp(mineRequestOption));
-    Promise.all(mineRequestPromises).then((data) => console.log(data));
+    Promise.all(mineRequestPromises).then((data) => console.log(""));
 
     Promise.all(requestPromises).then((data) => {
       // return;
@@ -179,6 +179,26 @@ module.exports = {
         return rp(bulkRegisterOptions);
       })
       .then((data) => {
+        // every nodes in the n/w  running consensus
+        const consensusPromises = [];
+        coin.networkNodes.forEach((networkNodeUrl) => {
+          console.log(`networkNodeUrl called from =${networkNodeUrl}`);
+          const requestOptions = {
+            uri: networkNodeUrl + "/consensus",
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+            json: true,
+          };
+          consensusPromises.push(rp(requestOptions));
+        });
+        Promise.all(consensusPromises).then((response) => {
+          response.forEach((data) => {
+            console.log(data);
+          });
+        });
+
         return callBack(null, {
           note: "new node registered in network successfully !",
         });
@@ -212,14 +232,17 @@ module.exports = {
 
   // implement consensus algorithm (longest chain rule)
   consensus: (callBack = () => {}) => {
+    // console.log(`current node ulr = ${coin.currentNodeUrl}`);
+    // console.log(`network nodes = ${coin.networkNodes}`);
+
     const requestPromises = [];
     coin.networkNodes.forEach((networkNodeUrl) => {
       const requestOptions = {
         uri: networkNodeUrl + "/blockchain",
         method: "GET",
         json: true,
-      }; 
-      
+      };
+
       requestPromises.push(rp(requestOptions));
     });
     Promise.all(requestPromises).then((blockchains) => {
@@ -232,11 +255,6 @@ module.exports = {
           maxChainLength = blockchain.chain.length;
           newLongestChain = blockchain.chain;
           newPendingTransactions = blockchain.pendingTransactions;
-          // console.log( coin.chainIsValid(newLongestChain));
-          // newLongestChain.forEach(longeshchain =>{
-          //     console.log(longeshchain);
-          // })
-          // console.log( newLongestChain && coin.chainIsValid(newLongestChain));
         }
       });
 
@@ -261,23 +279,11 @@ module.exports = {
   // return all nodes in the network (network nodes)
   returnNodesUrl: (callBack = () => {}) => {
     const urls = coin.networkNodes;
-    console.log(`urls = ${urls}`);
     return callBack(null, urls);
   },
   // count total votes of each candidte
   countVote: async (callBack = () => {}) => {
-    console.log("called");
-    // implmementing consensus algorithm
-    // const nodeConsensus = {
-    //   uri: coin.currentNodeUrl + "/consensus",
-    //   method: "get",
-    //   json: true,
-    // };
-    // const nodeConsensusResponse = rp(nodeConsensus);
-    // Promise.resolve(nodeConsensusResponse).then((response) => {
-    //   console.log(response);
-    //   //
-    // });
+    // console.log("called");
 
     //count votes
     const voteObject = [];

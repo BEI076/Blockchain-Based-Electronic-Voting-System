@@ -9,10 +9,11 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
-const port = process.env.PORT || 3002;
+const port = process.env.PORT;
+// port = process.argv[2];
 
 app.use(
-  cors({ origin: process.env.CORS_ORIGIN || "http://192.168.1.109:3000" })
+  cors({ origin: process.env.CORS_ORIGIN})
 );
 
 app.use("/", router, blockchainRouter);

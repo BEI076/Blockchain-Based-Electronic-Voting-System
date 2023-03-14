@@ -9,8 +9,9 @@ const ManageAdmin = (props) => {
   useEffect(() => {
     getAdmin(token).then((response) => {
       try {
-        setAdminData(response.data);
-        console.log(response.data);
+        setAdminData(response.data || []);
+        // setAdminData(response.data);
+        // console.log(response.data);
       } catch {
         console.log(response);
       }
@@ -34,16 +35,17 @@ const ManageAdmin = (props) => {
           </tr>
         </thead>
         <tbody>
-          {adminData.map((item) => (
-            <tr key={item.a_id}>
-              <td>{item.username}</td>
-              <td>
-                <button onClick={() => handleDelete(item.a_id)} type="submit">
-                  Delete
-                </button>
-              </td>
-            </tr>
-          ))}
+          {adminData.length > 0 &&
+            adminData.map((item) => (
+              <tr key={item.a_id}>
+                <td>{item.username}</td>
+                <td>
+                  <button onClick={() => handleDelete(item.a_id)} type="submit">
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            ))}
         </tbody>
       </table>
     </div>
