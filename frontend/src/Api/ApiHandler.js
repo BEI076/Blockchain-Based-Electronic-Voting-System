@@ -404,11 +404,11 @@ export const deleteVote = async (token) => {
   });
 };
 
-//register and broadcast node
+//broadcast
 export const registeAndBroadcastNode = async (newNodeUrl, token) => {
   return await axios({
     method: "POST",
-    url: baseurl + "/register-and-broadcast-node",
+    url: baseurl + "/boradcast",
     data: {
       newNodeUrl: newNodeUrl,
       token: token,

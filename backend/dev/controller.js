@@ -10,6 +10,7 @@ const {
   consensus,
   countVote,
   returnNodesUrl,
+  boradcast,
 } = require("./networkNode");
 
 module.exports = {
@@ -130,6 +131,18 @@ module.exports = {
   },
   countVote: (req, res) => {
     countVote((error, results) => {
+      if (error) {
+        console.log(error);
+        return;
+      }
+      return res.status(200).json({
+        success: 1,
+        data: results,
+      });
+    });
+  },
+  boradcast: (req, res) => {
+    boradcast(req.body, (error, results) => {
       if (error) {
         console.log(error);
         return;

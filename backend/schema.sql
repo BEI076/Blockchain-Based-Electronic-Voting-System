@@ -52,7 +52,11 @@ select * from voter;
 
 update voter 
 set flag = false
-where v_id = 19;
+where v_id =23 ;
+
+update voter 
+set flag = false
+where v_id =19 ;
 
 SELECT * FROM candidate;
 SELECT * FROM candidate where p_id =1 and c_id = 2;
