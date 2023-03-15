@@ -151,7 +151,6 @@ module.exports = {
 
     if (coin.networkNodes.indexOf(newNodeUrl) == -1)
       coin.networkNodes.push(newNodeUrl);
-    coin.networkNodes.push(...data.nodeArray);
     const regNodesPromises = [];
     coin.networkNodes.forEach((networkNodeUrl) => {
       const requestOptions = {
@@ -334,7 +333,6 @@ module.exports = {
     const newNodeUrl = data.newNodeUrl;
     const token = data.token;
     data.newNodeUrl = coin.currentNodeUrl;
-    data.nodeArray = [coin.currentNodeUrl, ...coin.networkNodes];
     console.log(data);
     // register braodcast
     const registerNode = {
