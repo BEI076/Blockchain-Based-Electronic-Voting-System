@@ -86,7 +86,7 @@ module.exports = {
     });
   },
   registerNode: (req, res) => {
-    registerNode(req.body.newNodeUrl, (error, results) => {
+    registerNode(req.body.allNetworkNodes, (error, results) => {
       if (error) {
         console.log(error);
         return;
@@ -150,6 +150,7 @@ module.exports = {
       return res.status(200).json({
         success: 1,
         data: results,
+        message: "Node sucessfully added to the network",
       });
     });
   },

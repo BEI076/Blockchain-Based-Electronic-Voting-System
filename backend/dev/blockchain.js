@@ -1,6 +1,6 @@
 const sha256 = require("sha256"); //importing sha256 hashing
-const currentNodeUrl = process.env.IP_ADDRESS_SERVER;
-// const currentNodeUrl = process.argv[3];
+// const currentNodeUrl = process.env.IP_ADDRESS_SERVER;
+const currentNodeUrl = process.argv[3];
 
 const { v4: uuidv4 } = require("uuid");
 
@@ -10,7 +10,7 @@ function Blockchain() {
   this.pendingTransactions = []; // store pending transactions
   this.createNewBlock(100, "0", "0"); // default parameters for genesis block
   this.currentNodeUrl = currentNodeUrl; // store current node url
-  this.networkNodes = []; // store url of all the connected nodes in the netwrok
+  this.networkNodes = [currentNodeUrl]; // store url of all the connected nodes in the netwrok
 }
 
 // create a new block (nonce, previousBlockHash, hash)

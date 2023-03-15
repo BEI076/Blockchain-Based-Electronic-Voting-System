@@ -7,58 +7,51 @@ const NodeManage = (props) => {
   const [ip, setIp] = useState("");
   const [port, setPort] = useState("");
   const [nodes, setNodes] = useState([]);
-  const [refresh, setRefresh] = useState("");
+  const [refresh, setRefresh] = useState(false);
 
   useEffect(() => {
-    getNetworkNodes(token)
-      .then((response) => {
-        setNodes(response.data || []);
-        // setNodes(response.data);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+    getNetworkNodes(token).then((response) => {
+      console.log(response);
+      setNodes(response.data);
+    });
   }, [token, refresh]);
 
-  const submitHandler = (e) => {
+  const submitHandler = async (e) => {
     e.preventDefault();
-    const newNodeUrl = `http://${ip}:${port}`;
-    registeAndBroadcastNode(newNodeUrl, token)
-      .then((response) => {
-        setAlert(response.data.note);
-        setRefresh(Math.random());
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+    const newNodeUrl = "http://" + ip + ":" + port;
+    await registeAndBroadcastNode(newNodeUrl, token).then((response) => {
+      console.log(response);
+      setAlert(response.data.message);
+    });
+    setRefresh(!refresh);
   };
-
   return (
     <div className="node-container">
       <form onSubmit={submitHandler}>
-        <label htmlFor="ip">IP Address</label>
+        <label>IP Addres</label>
         <input
           type="text"
-          id="ip"
           required
           placeholder="Enter IP Address Of Running Node"
           onChange={(e) => setIp(e.target.value)}
         />
-        <label htmlFor="port">Port</label>
+        <label>PORT</label>
         <input
           type="number"
-          id="port"
           required
           placeholder="Enter Port Number"
           onChange={(e) => setPort(e.target.value)}
         />
         <button type="submit">Connect</button>
       </form>
-      {alert && <div className="alert">{alert}</div>}
+      <div class="alert">{alert}</div>
       <div className="manage-node">
         <h3>Current Nodes In The Network</h3>
         <ul>
-          {nodes.length > 0 && nodes.map((node) => <li key={node}>{node}</li>)}
+          {nodes.length > 0 &&
+            nodes.map((node) => {
+              return <li>{node}</li>;
+            })}
         </ul>
       </div>
     </div>

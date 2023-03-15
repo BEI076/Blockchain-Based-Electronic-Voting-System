@@ -5,10 +5,11 @@
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "node_1": "nodemon  app.js ${PORT} ${IP_ADDRESS_SERVER}",
+    "node_5": "nodemon  app.js ${PORT} ${IP_ADDRESS_SERVER}",
+    "node_1": "nodemon  app.js 3001 http://192.168.1.67:3001",
     "node_2": "nodemon  app.js 3002 http://192.168.1.67:3002",
-    "node_3": "nodemon  app.js 3003 http://192.168.1.67:3003"
-
+    "node_3": "nodemon  app.js 3003 http://192.168.1.67:3003",
+    "node_4": "nodemon  app.js 3004 http://192.168.1.67:3004"
   },
   "keywords": [],
   "author": "",

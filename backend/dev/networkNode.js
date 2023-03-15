@@ -146,17 +146,19 @@ module.exports = {
 
   // the current node recieve new node, register it and broadcast to all the nodes of the network
   registerBroadcast: (data, callBack = () => {}) => {
-    const newNodeUrl = data.newNodeUrl;
+    const allNetworkNodes = data.allNetworkNodes;
     const token = data.token;
+    allNetworkNodes.forEach((newNodeUrl) => {
+      if (coin.networkNodes.indexOf(newNodeUrl) == -1)
+        coin.networkNodes.push(newNodeUrl);
+    });
 
-    if (coin.networkNodes.indexOf(newNodeUrl) == -1)
-      coin.networkNodes.push(newNodeUrl);
     const regNodesPromises = [];
     coin.networkNodes.forEach((networkNodeUrl) => {
       const requestOptions = {
         uri: networkNodeUrl + "/register-node",
         method: "POST",
-        body: { newNodeUrl: newNodeUrl },
+        body: { allNetworkNodes: [...coin.networkNodes, coin.currentNodeUrl] },
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -169,62 +171,19 @@ module.exports = {
     });
     return callBack(null, {
       allNetworkNodes: [...coin.networkNodes, coin.currentNodeUrl],
-      // const bulkRegisterOptions = {
-      //   uri: newNodeUrl + "/register-nodes-bulk",
-      //   method: "POST",
-      //   body: {
-      //     allNetworkNodes: [...coin.networkNodes, coin.currentNodeUrl],
-      //   },
-      //   headers: {
-      //     Authorization: `Bearer ${token}`,
-      //   },
-      //   json: true,
-      // };
-      // return rp(bulkRegisterOptions);
     });
-    // .then((data) => {
-    //   // implmementing consensus algorithm
-    //   // const nodeConsensusResponse = [];
-    //   // coin.networkNodes.forEach((nodeUrl) => {
-    //   //   const nodeConsensus = {
-    //   //     uri: nodeUrl + "/consensus",
-    //   //     method: "get",
-    //   //     json: true,
-    //   //   };
-    //   //   nodeConsensusResponse.push(rp(nodeConsensus));
-    //   // });
-    //   // Promise.all(nodeConsensusResponse).then((data) => {
-    //   //   console.log("");
-    //   // });
-
-    //   return callBack(null, {
-    //     note: "new node registered in network successfully !",
-    //   });
-    // });
   },
 
   // all the nodes of the network receive new node, register it and return their details
-  registerNode: (newNodeUrl, callBack = () => {}) => {
-    const nodeNotAlreadyPresent = coin.networkNodes.indexOf(newNodeUrl) == -1;
-    const notCurrentNode = coin.currentNodeUrl !== newNodeUrl;
-    if (nodeNotAlreadyPresent && notCurrentNode)
-      coin.networkNodes.push(newNodeUrl);
+  registerNode: (allNetworkNodes, callBack = () => {}) => {
+    allNetworkNodes.forEach((newNodeUrl) => {
+      const nodeNotAlreadyPresent = coin.networkNodes.indexOf(newNodeUrl) == -1;
+      const notCurrentNode = coin.currentNodeUrl !== newNodeUrl;
+      if (nodeNotAlreadyPresent && notCurrentNode)
+        coin.networkNodes.push(newNodeUrl);
+    });
     return callBack(null, {
       note: "new node registered successfully",
-    });
-  },
-
-  // the new node register all the nodes of the network into it
-  registerNodesBulk: (allNetworkNodes, callBack = () => {}) => {
-    allNetworkNodes.forEach((networkNodeUrl) => {
-      const nodeNotAlreadyPresent =
-        coin.networkNodes.indexOf(networkNodeUrl) == -1;
-      const notCurrentNode = coin.currentNodeUrl !== networkNodeUrl;
-      if (nodeNotAlreadyPresent && notCurrentNode)
-        coin.networkNodes.push(networkNodeUrl);
-    });
-    return callBack(null, {
-      note: "Bulk registration of nodes successful!",
     });
   },
 
@@ -284,19 +243,6 @@ module.exports = {
   },
   // count total votes of each candidte
   countVote: async (callBack = () => {}) => {
-    console.log("called");
-    // implmementing consensus algorithm
-    // const nodeConsensus = {
-    //   uri: coin.currentNodeUrl + "/consensus",
-    //   method: "get",
-    //   json: true,
-    // };
-    // const nodeConsensusResponse = rp(nodeConsensus);
-    // Promise.resolve(nodeConsensusResponse).then((response) => {
-    //   console.log(response);
-    //   //
-    // });
-
     //count votes
     const voteObject = [];
     getFullCandidate((error, results) => {
@@ -325,15 +271,16 @@ module.exports = {
           // );
         });
         // console.log(voteObject);
-        // return callBack(null, voteObject);
+        return callBack(null, "Result Published");
       }
     });
   },
   boradcast: (data, callBack = () => {}) => {
     const newNodeUrl = data.newNodeUrl;
     const token = data.token;
-    data.newNodeUrl = coin.currentNodeUrl;
-    console.log(data);
+    data.allNetworkNodes = [...coin.networkNodes, coin.currentNodeUrl];
+    // data.newNodeUrl = coin.currentNodeUrl;
+    // console.log(data.token);
     // register braodcast
     const registerNode = {
       uri: newNodeUrl + "/register-and-broadcast-node",
@@ -346,7 +293,7 @@ module.exports = {
     };
     const registerNodeResponse = rp(registerNode);
     Promise.resolve(registerNodeResponse).then((response) => {
-      console.log(response);
+      // console.log(response);
       const allNetworkNodes = response.data.allNetworkNodes;
       allNetworkNodes.forEach((networkNodeUrl) => {
         const nodeNotAlreadyPresent =
@@ -355,8 +302,27 @@ module.exports = {
         if (nodeNotAlreadyPresent && notCurrentNode)
           coin.networkNodes.push(networkNodeUrl);
       });
-      //
-      //
+
+      // implmementing consensus algorithm after adding new nodes each time
+      const allNewNetworkNodes = [...coin.networkNodes, coin.currentNodeUrl]
+      const nodeRequestPromises = [];
+      allNewNetworkNodes.forEach((node) => {
+        const nodeConsensus = {
+          uri: node + "/consensus",
+          method: "get",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          json: true,
+        };
+        nodeRequestPromises.push(rp(nodeConsensus));
+      });
+      Promise.all(nodeRequestPromises).then((response) => {
+        console.log(response);
+      });
+    });
+    return callBack(null, {
+      message: "node created and broadcasted successfully",
     });
   },
 };
