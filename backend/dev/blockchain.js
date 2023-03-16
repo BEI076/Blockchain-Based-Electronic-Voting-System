@@ -1,6 +1,6 @@
 const sha256 = require("sha256"); //importing sha256 hashing
-// const currentNodeUrl = process.env.IP_ADDRESS_SERVER;
-const currentNodeUrl = process.argv[3];
+const currentNodeUrl = process.env.IP_ADDRESS_SERVER;
+// const currentNodeUrl = process.argv[3];
 
 const { v4: uuidv4 } = require("uuid");
 

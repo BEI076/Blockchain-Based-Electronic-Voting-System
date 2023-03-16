@@ -9,8 +9,8 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
-// const port = process.env.PORT;
-port = process.argv[2];
+const port = process.env.PORT;
+// port = process.argv[2];
 
 app.use(
   cors({ origin: process.env.CORS_ORIGIN})

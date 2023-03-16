@@ -13,21 +13,27 @@ const { CreateVote } = require("../api/service/voteService");
 
 module.exports = {
   // return entire  blockchain data
-  getBlockchain: (callBack = () => {}) => {
+  getBlockchain: (callBack = () => { }) => {
     return callBack(null, coin);
   },
 
   // create transaction and add transaction to pendingTransactions
-  transaction: (data, callBack = () => {}) => {
-    const newTransaction = data;
-    const blockIndex = coin.addTransactionToPendingTransactions(newTransaction);
-    return callBack(null, {
-      note: `Transaction will be added in block ${blockIndex}`,
-    });
+  transaction: (data, callBack = () => { }) => {
+    const newTransaction = data.newTransaction;
+    const networkNodeUrl = data.networkNodeUrl;
+    if (networkNodeUrl != coin.currentNodeUrl) {
+      const blockIndex = coin.addTransactionToPendingTransactions(newTransaction);
+      return callBack(null, {
+        note: `Transaction will be added in block ${blockIndex}`,
+      });
+    } else {
+      return callBack("request on same node")
+    }
+
   },
 
   // broadcast transaction to all over the network
-  transactionBroadcast: (data, callBack = () => {}) => {
+  transactionBroadcast: (data, callBack = () => { }) => {
     const trasactionArray = data.transaction;
     const token = data.token;
     const requestPromises = [];
@@ -47,7 +53,10 @@ module.exports = {
         const requestOptions = {
           uri: networkNodeUrl + "/transaction",
           method: "POST",
-          body: newTransaction,
+          body: {
+            networkNodeUrl: networkNodeUrl,
+            newTransaction: newTransaction
+          },
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -85,7 +94,7 @@ module.exports = {
   },
 
   // mine a block
-  mine: (data, callBack = () => {}) => {
+  mine: (data, callBack = () => { }) => {
     const token = data.token;
     const lastBlock = coin.getLastBlock();
     const previousBlockHash = lastBlock["hash"];
@@ -107,7 +116,10 @@ module.exports = {
       const requestOptions = {
         uri: networkNodeUrl + "/receive-new-block",
         method: "POST",
-        body: { newBlock: newBlock },
+        body: {
+          newBlock: newBlock,
+          networkNodeUrl: networkNodeUrl
+        },
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -124,12 +136,14 @@ module.exports = {
   },
 
   // the nodes present in the network recieve newblock and push into their chain
-  receiveNewBlock: (data, callBack = () => {}) => {
+  receiveNewBlock: (data, callBack = () => { }) => {
     const newBlock = data.newBlock;
+    const networkNodeUrl = data.networkNodeUrl;
     const lastBlock = coin.getLastBlock();
+    const isNotSameNode = networkNodeUrl != coin.currentNodeUrl;
     const correctHash = lastBlock.hash === newBlock.previousBlockHash;
     const correctIndex = lastBlock["index"] + 1 === newBlock["index"];
-    if (correctHash && correctIndex) {
+    if (correctHash && correctIndex && isNotSameNode) {
       coin.chain.push(newBlock);
       coin.pendingTransactions = [];
       return callBack(null, {
@@ -145,7 +159,7 @@ module.exports = {
   },
 
   // the current node recieve new node, register it and broadcast to all the nodes of the network
-  registerBroadcast: (data, callBack = () => {}) => {
+  registerBroadcast: (data, callBack = () => { }) => {
     const allNetworkNodes = data.allNetworkNodes;
     const token = data.token;
     allNetworkNodes.forEach((newNodeUrl) => {
@@ -175,7 +189,7 @@ module.exports = {
   },
 
   // all the nodes of the network receive new node, register it and return their details
-  registerNode: (allNetworkNodes, callBack = () => {}) => {
+  registerNode: (allNetworkNodes, callBack = () => { }) => {
     allNetworkNodes.forEach((newNodeUrl) => {
       const nodeNotAlreadyPresent = coin.networkNodes.indexOf(newNodeUrl) == -1;
       const notCurrentNode = coin.currentNodeUrl !== newNodeUrl;
@@ -188,7 +202,7 @@ module.exports = {
   },
 
   // implement consensus algorithm (longest chain rule)
-  consensus: (callBack = () => {}) => {
+  consensus: (callBack = () => { }) => {
     const requestPromises = [];
     coin.networkNodes.forEach((networkNodeUrl) => {
       const requestOptions = {
@@ -236,13 +250,13 @@ module.exports = {
     });
   },
   // return all nodes in the network (network nodes)
-  returnNodesUrl: (callBack = () => {}) => {
+  returnNodesUrl: (callBack = () => { }) => {
     const urls = coin.networkNodes;
     // console.log(`urls = ${urls}`);
     return callBack(null, urls);
   },
   // count total votes of each candidte
-  countVote: async (callBack = () => {}) => {
+  countVote: async (callBack = () => { }) => {
     //count votes
     const voteObject = [];
     getFullCandidate((error, results) => {
@@ -275,7 +289,7 @@ module.exports = {
       }
     });
   },
-  boradcast: (data, callBack = () => {}) => {
+  boradcast: (data, callBack = () => { }) => {
     const newNodeUrl = data.newNodeUrl;
     const token = data.token;
     data.allNetworkNodes = [...coin.networkNodes, coin.currentNodeUrl];
