@@ -76,7 +76,7 @@ CREATE TABLE result (
 
 select * from result;
 
-CREATE TABLE verifyvoter (
+CREATE TABLE prevoter (
     v_id INT NOT NULL AUTO_INCREMENT,
     name VARCHAR(255) NOT NULL,
     address VARCHAR(255) NOT NULL,
@@ -84,12 +84,14 @@ CREATE TABLE verifyvoter (
     citizenshipid BIGINT NOT NULL,
     dob DATE NOT NULL,
     password VARCHAR(255) NOT NULL,
-	front_image VARCHAR(255) NOT NULL,
-	back_image VARCHAR(255) NOT NULL,
+	frontImage VARCHAR(255) NOT NULL,
+	backImage VARCHAR(255) NOT NULL,
+	flag BOOLEAN NOT NULL DEFAULT false,
     PRIMARY KEY (v_id)
 );
-select * from verifyvoter;
-drop table verifyvoter;
+
+select * from prevoter;
+drop table prevoter;
 SELECT Candidate.ca_id, Candidate.name, Candidate.address,candidate.citizenshipid, candidate.dob, Category.name AS category_name, Party.name AS party_name
 FROM Candidate
 JOIN Category ON Candidate.c_id = Category.c_id

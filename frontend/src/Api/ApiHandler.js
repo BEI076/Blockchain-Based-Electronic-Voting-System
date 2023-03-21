@@ -448,7 +448,6 @@ export const sotreData = async (formData) => {
 };
 
 export const getRawData = async (token) => {
-  // console.log(formData);
   return await axios({
     method: "GET",
     url: baseurl + "/get-raw-data",
@@ -458,7 +457,9 @@ export const getRawData = async (token) => {
       "Content-Type": "image/png",
     },
   }).then((response) => {
+    console.log(response.data)
     return response.data;
+
   });
 };
 

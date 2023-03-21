@@ -89,7 +89,7 @@ module.exports = {
       }
       return res.status(200).json({
         success: 1,
-        data: "verify table updated",
+        data: "prevoter table updated",
       });
     });
   },

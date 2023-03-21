@@ -16,7 +16,7 @@ module.exports = {
     } = data;
 
     pool.query(
-      `INSERT INTO verifyvoter (      
+      `INSERT INTO prevoter (      
         name,
         address,
         email,
@@ -46,7 +46,7 @@ module.exports = {
   },
   getRawData: (callBack = () => {}) => {
     pool.query(
-      `SELECT *, CONCAT("/uploads/", frontImage) AS imageUrl1, CONCAT("/uploads/", backImage) AS imageUrl2 FROM verifyvoter`,
+      `SELECT *, CONCAT("/uploads/", frontImage) AS imageUrl1, CONCAT("/uploads/", backImage) AS imageUrl2 FROM prevoter`,
       [],
       (error, results) => {
         if (error) {
@@ -59,7 +59,7 @@ module.exports = {
   updateRawData: (v_id, callBack = () => {}) => {
     // console.log(`data = ${v_id}`);
     pool.query(
-      `UPDATE verifyvoter
+      `UPDATE prevoter
       SET flag = true
       WHERE V_id = ?`,
       [v_id],
