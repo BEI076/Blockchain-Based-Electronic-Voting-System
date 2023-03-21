@@ -22,7 +22,8 @@ const { userCheckToken } = require("../auth/userTokenValidation");
 router.get("/blockchain", getBlockchain);
 router.post("/transaction", adminCheckToken, transaction);
 router.post("/transaction-broadcast", adminCheckToken, transactionBroadcast);
-router.post("/mine", adminCheckToken, userCheckToken, mine);
+// router.post("/mine", adminCheckToken, userCheckToken, mine);
+router.post("/mine", mine);
 router.post("/receive-new-block", adminCheckToken, receiveNewBlock);
 
 //nodes synchronization
@@ -34,7 +35,7 @@ router.post("/register-node", adminCheckToken, registerNode);
 router.post("/register-nodes-bulk", adminCheckToken, registerNodesBulk);
 
 //block verification
-router.get("/consensus",adminCheckToken, consensus);
+router.get("/consensus", consensus);
 
 // return network nodes
 router.get("/get-network-nodes", adminCheckToken, returnNodesUrl);

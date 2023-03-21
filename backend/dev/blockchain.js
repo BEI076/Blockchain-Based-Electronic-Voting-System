@@ -92,6 +92,30 @@ Blockchain.prototype.proofOfWork = function (
   }
   return nonce;
 };
+//fing highest count blockchain
+Blockchain.prototype.findBlockchainWithHighestCount = function (blockchains, highestcountshash) {
+  for (let i = 0; i < blockchains.length; i++) {
+    const blockchain = blockchains[i];
+    const lastBlock = blockchain.chain[blockchain.chain.length - 1];
+    if (lastBlock.hash === highestcountshash) {
+      return blockchain;
+    }
+  }
+  return null;
+}
+//fing all chains having longestchain
+Blockchain.prototype.findBlockchainsWithLongestChain = function (blockchains, maxChainLength) {
+  let longestChains = []
+  for (let i = 0; i < blockchains.length; i++) {
+    const blockchain = blockchains[i];
+    if (blockchains[i].chain.length == maxChainLength) {
+      longestChains.push(blockchain[i])
+    }
+
+  }
+  return longestChains;
+}
+
 
 // implement consensus algorithem (longest chain rule)
 Blockchain.prototype.chainIsValid = function (blockchain) {
