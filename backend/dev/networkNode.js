@@ -13,12 +13,12 @@ const { CreateVote } = require("../api/service/voteService");
 
 module.exports = {
   // return entire  blockchain data
-  getBlockchain: (callBack = () => { }) => {
+  getBlockchain: (callBack = () => {}) => {
     return callBack(null, coin);
   },
 
   // create transaction and add transaction to pendingTransactions
-  transaction: (data, callBack = () => { }) => {
+  transaction: (data, callBack = () => {}) => {
     const newTransaction = data.newTransaction;
     const networkNodeUrl = data.networkNodeUrl;
     if (networkNodeUrl != coin.currentNodeUrl) {
@@ -33,7 +33,7 @@ module.exports = {
   },
 
   // broadcast transaction to all over the network
-  transactionBroadcast: (data, callBack = () => { }) => {
+  transactionBroadcast: (data, callBack = () => {}) => {
     const trasactionArray = data.transaction;
     const token = data.token;
     const requestPromises = [];
@@ -93,7 +93,7 @@ module.exports = {
   },
 
   // mine a block
-  mine: (data, callBack = () => { }) => {
+  mine: (data, callBack = () => {}) => {
     const token = data.token;
     const lastBlock = coin.getLastBlock();
     const previousBlockHash = lastBlock["hash"];
@@ -135,7 +135,7 @@ module.exports = {
   },
 
   // the nodes present in the network recieve newblock and push into their chain
-  receiveNewBlock: (data, callBack = () => { }) => {
+  receiveNewBlock: (data, callBack = () => {}) => {
     const newBlock = data.newBlock;
     const networkNodeUrl = data.networkNodeUrl;
     const lastBlock = coin.getLastBlock();
@@ -159,7 +159,7 @@ module.exports = {
   },
 
   // register and broadcast
-  registerBroadcast: async (data, callBack = () => { }) => {
+  registerBroadcast: async (data, callBack = () => {}) => {
     const { allNetworkNodes, token } = data;
 
     allNetworkNodes.forEach((newNodeUrl) => {
@@ -194,7 +194,7 @@ module.exports = {
   },
 
   // all the nodes of the network receive new node, register it and return their details
-  registerNode: (allNetworkNodes, callBack = () => { }) => {
+  registerNode: (allNetworkNodes, callBack = () => {}) => {
     allNetworkNodes.forEach((newNodeUrl) => {
       const nodeNotAlreadyPresent = !coin.networkNodes.includes(newNodeUrl);
       const notCurrentNode = coin.currentNodeUrl !== newNodeUrl;
@@ -210,7 +210,7 @@ module.exports = {
   },
 
   // implement consensus algorithm (longest chain rule)
-  consensus: (callBack = () => { }) => {
+  consensus: (callBack = () => {}) => {
     const requestPromises = [];
     coin.networkNodes.forEach((networkNodeUrl) => {
       const requestOptions = {
@@ -234,7 +234,10 @@ module.exports = {
         }
       });
 
-      const newLongestChain = coin.findLongestChain(blockchains,maxChainLength)
+      const newLongestChain = coin.findLongestChain(
+        blockchains,
+        maxChainLength
+      );
       if (
         !newLongestChain ||
         (newLongestChain && !coin.chainIsValid(newLongestChain))
@@ -254,13 +257,13 @@ module.exports = {
     });
   },
   // return all nodes in the network (network nodes)
-  returnNodesUrl: (callBack = () => { }) => {
+  returnNodesUrl: (callBack = () => {}) => {
     const urls = coin.networkNodes;
     // console.log(`urls = ${urls}`);
     return callBack(null, urls);
   },
   // count total votes of each candidte
-  countVote: async (callBack = () => { }) => {
+  countVote: async (callBack = () => {}) => {
     //count votes
     const voteObject = [];
     getFullCandidate((error, results) => {
@@ -293,7 +296,7 @@ module.exports = {
       }
     });
   },
-  broadcast: async (data, callBack = () => { }) => {
+  broadcast: async (data, callBack = () => {}) => {
     const { newNodeUrl, token } = data;
     data.allNetworkNodes = [...coin.networkNodes, coin.currentNodeUrl];
 
@@ -308,41 +311,36 @@ module.exports = {
       json: true,
     };
 
-    try {
-      const registerNodeResponse = await rp(registerNode);
-      const allNetworkNodes = registerNodeResponse.data.allNetworkNodes;
+    const registerNodeResponse = await rp(registerNode);
+    const allNetworkNodes = registerNodeResponse.data.allNetworkNodes;
 
-      allNetworkNodes.forEach((networkNodeUrl) => {
-        const nodeNotAlreadyPresent =
-          !coin.networkNodes.includes(networkNodeUrl);
-        const notCurrentNode = coin.currentNodeUrl !== networkNodeUrl;
-        if (nodeNotAlreadyPresent && notCurrentNode) {
-          coin.networkNodes.push(networkNodeUrl);
-        }
-      });
+    allNetworkNodes.forEach((networkNodeUrl) => {
+      const nodeNotAlreadyPresent = !coin.networkNodes.includes(networkNodeUrl);
+      const notCurrentNode = coin.currentNodeUrl !== networkNodeUrl;
+      if (nodeNotAlreadyPresent && notCurrentNode) {
+        coin.networkNodes.push(networkNodeUrl);
+      }
+    });
 
-      // implementing consensus algorithm after adding new nodes each time
-      const allNewNetworkNodes = [...coin.networkNodes, coin.currentNodeUrl];
-      const nodeRequestPromises = allNewNetworkNodes.map((node) => {
-        const nodeConsensus = {
-          uri: `${node}/consensus`,
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          json: true,
-        };
-        return rp(nodeConsensus);
-      });
+    // implementing consensus algorithm after adding new nodes each time
+    const allNewNetworkNodes = [...coin.networkNodes, coin.currentNodeUrl];
+    const nodeRequestPromises = allNewNetworkNodes.map((node) => {
+      const nodeConsensus = {
+        uri: `${node}/consensus`,
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        json: true,
+      };
+      return rp(nodeConsensus);
+    });
 
-      const responses = await Promise.all(nodeRequestPromises);
-      console.log(responses);
+    const responses = await Promise.all(nodeRequestPromises);
+    console.log(responses);
 
-      return callBack(null, {
-        message: "node created and broadcasted successfully",
-      });
-    } catch (error) {
-      return callBack(error);
-    }
+    return callBack(null, {
+      message: "node created and broadcasted successfully",
+    });
   },
 };

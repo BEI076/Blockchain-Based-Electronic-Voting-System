@@ -94,7 +94,6 @@ Blockchain.prototype.proofOfWork = function (
 };
 //fing highest count blockchain
 Blockchain.prototype.findLongestChain = function (blockchains,maxChainLength) {
-  let maxChainLength = 0;
   let longestChains = [];
 
   const counts = {};
