@@ -109,7 +109,7 @@ Blockchain.prototype.chainIsValid = function (blockchain) {
       },
       currentBlock["nonce"]
     );
-    // if (blockHash.substring(0, 4) !== '0000') validChain = false;
+    // if (blockHash.substring(0, 1) !== '0') validChain = false;
 
     if (currentBlock["previousBlockHash"] !== prevBlock["hash"])
       validChain = false;

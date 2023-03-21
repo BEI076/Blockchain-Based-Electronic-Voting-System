@@ -49,27 +49,27 @@ module.exports = {
       );
       coin.addTransactionToPendingTransactions(newTransaction);
 
-      coin.networkNodes.forEach((networkNodeUrl) => {
-        const requestOptions = {
-          uri: networkNodeUrl + "/transaction",
-          method: "POST",
-          body: {
-            networkNodeUrl: coin.currentNodeUrl,
-            newTransaction: newTransaction,
-          },
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          json: true,
-        };
-        requestPromises.push(rp(requestOptions));
-        Promise.all(requestPromises).then((data) => {
-          // return;
-          return callBack(null, {
-            note: "Transaction created and broadcasted successfully!",
-          });
-        });
-      });
+      // coin.networkNodes.forEach((networkNodeUrl) => {
+      //   const requestOptions = {
+      //     uri: networkNodeUrl + "/transaction",
+      //     method: "POST",
+      //     body: {
+      //       networkNodeUrl: coin.currentNodeUrl,
+      //       newTransaction: newTransaction,
+      //     },
+      //     headers: {
+      //       Authorization: `Bearer ${token}`,
+      //     },
+      //     json: true,
+      //   };
+      //   requestPromises.push(rp(requestOptions));
+      //   Promise.all(requestPromises).then((data) => {
+      //     // return;
+      //     return callBack(null, {
+      //       note: "Transaction created and broadcasted successfully!",
+      //     });
+      //   });
+      // });
     });
 
     // mining

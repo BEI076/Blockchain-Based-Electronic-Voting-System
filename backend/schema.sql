@@ -52,7 +52,15 @@ select * from voter;
 
 update voter 
 set flag = false
-where v_id =23 ;
+where v_id =1 ;
+
+update voter 
+set flag = false
+where v_id =2 ;
+
+update voter 
+set flag = false
+where v_id =3 ;
 
 update voter 
 set flag = false

@@ -12,10 +12,17 @@ app.use(express.static("public"));
 const port = process.env.PORT;
 // port = process.argv[2];
 
-app.use(
-  cors({ origin: process.env.CORS_ORIGIN})
-);
+function responseTimeLogger(req, res, next) {
+  const start = Date.now();
+  res.on("finish", () => {
+    const elapsed = Date.now() - start;
+    console.log(`${req.method} ${req.originalUrl} ${elapsed}ms`);
+  });
+  next();
+}
 
+app.use(cors({ origin: process.env.CORS_ORIGIN }));
+app.use(responseTimeLogger);
 app.use("/", router, blockchainRouter);
 
 app.listen(port, () => {
