@@ -22,7 +22,7 @@ const { userCheckToken } = require("../auth/userTokenValidation");
 router.get("/blockchain", getBlockchain);
 router.post("/transaction", adminCheckToken, transaction);
 router.post("/transaction-broadcast", adminCheckToken, transactionBroadcast);
-router.post("/mine", adminCheckToken, userCheckToken, mine);
+ router.post("/mine", adminCheckToken, userCheckToken, mine);
 router.post("/receive-new-block", adminCheckToken, receiveNewBlock);
 
 //nodes synchronization
