@@ -12,6 +12,7 @@ const {
   returnNodesUrl,
   broadcast,
 } = require("./networkNode");
+const { acquireLock, releaseLock } = require("../config/locking");
 
 module.exports = {
   getBlockchain: (req, res) => {
@@ -36,17 +37,28 @@ module.exports = {
       });
     });
   },
-  transactionBroadcast: (req, res) => {
-    transactionBroadcast(req.body, (error, results) => {
-      if (error) {
-        console.log(error);
-        return;
-      }
-      return res.status(200).json({
-        success: 1,
-        data: results,
+  transactionBroadcast: async (req, res) => {
+    try {
+      const lockPath = await acquireLock();
+      // Perform critical section of code here
+      transactionBroadcast(req.body, (error, results) => {
+        if (error) {
+          console.log(error);
+          return;
+        }
+        return res.status(200).json({
+          success: 1,
+          data: results,
+        });
       });
-    });
+      setTimeout(() => {
+        releaseLock(lockPath);
+      }, 5000);
+      res.status(200).json({ message: "Block added to blockchain" });
+    } catch (error) {
+      console.error("Error acquiring lock:", error);
+      res.status(500).json({ error: "Failed to add block to blockchain" });
+    }
   },
   mine: (req, res) => {
     mine(req.body, (error, results) => {
@@ -155,5 +167,3 @@ module.exports = {
     });
   },
 };
-
-

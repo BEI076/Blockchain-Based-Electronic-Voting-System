@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "node-zookeeper-client": "^1.1.3",
+    "os": "^0.1.2"
+  }
+}
