@@ -234,7 +234,7 @@ module.exports = {
         }
       });
 
-      const newLongestChain = coin.findLongestChain(blockchains)
+      const newLongestChain = coin.findLongestChain(blockchains,maxChainLength)
       if (
         !newLongestChain ||
         (newLongestChain && !coin.chainIsValid(newLongestChain))
