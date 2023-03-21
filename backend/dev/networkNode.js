@@ -227,7 +227,7 @@ module.exports = {
       let newLongestChain = null;
       let newPendingTransactions = null;
       const counts = {};
-      let longestchains = [];
+
       blockchains.forEach((blockchain) => {
         if (blockchain.chain.length > maxChainLength) {
           maxChainLength = blockchain.chain.length;
@@ -235,19 +235,25 @@ module.exports = {
           newPendingTransactions = blockchain.pendingTransactions;
         }
       });
-      longestchains = coin.findBlockchainsWithLongestChain(blockchains, maxChainLength)
 
-      longestchains.forEach((blockchain) => {
-        if (counts[blockchain.chain[-1].hash]) {
-          counts[blockchain.chain[-1].hash]++;
-          console.log(counts[blockchain.chain[-1].hash])
+      const longestChains = coin.findBlockchainsWithLongestChain(blockchains, maxChainLength)
+      console.log(`longestchains = ${longestChains}`)
+
+      longestChains.forEach((blockchain) => {
+        console.log(` i am after finding the array of longest chain ${blockchain}`)
+        console.log(`blockchain ${blockchain.chain}`)
+        console.log(`hash = ${blockchain.chain[blockchain.chain.length - 1].hash}`)
+        if (counts[blockchain.chain[blockchain.chain.length - 1].hash]) {
+          counts[blockchain.chain[blockchain.chain.length - 1].hash]++;
+          console.log(counts[blockchain.chain[blockchain.chain.length - 1].hash])
 
         } else {
-          counts[blockchain.chain[-1].hash] = 1;
-          console.log(counts[blockchain.chain[-1].hash])
+          counts[blockchain.chain[blockchain.chain.length - 1].hash] = 1;
+          console.log(counts[blockchain.chain[blockchain.chain.length - 1].hash])
         }
       })
-
+      let highestcounts = 0;
+      let highestcountshash = null;
       for (let hash in counts) {
         if (counts[hash] > highestcounts) {
           highestcounts = counts[hash];
