@@ -54,7 +54,7 @@ module.exports = {
           uri: networkNodeUrl + "/transaction",
           method: "POST",
           body: {
-            networkNodeUrl: networkNodeUrl,
+            networkNodeUrl: coin.currentNodeUrl,
             newTransaction: newTransaction,
           },
           headers: {
@@ -117,7 +117,7 @@ module.exports = {
         method: "POST",
         body: {
           newBlock: newBlock,
-          networkNodeUrl: networkNodeUrl,
+          networkNodeUrl: coin.currentNodeUrl,
         },
         headers: {
           Authorization: `Bearer ${token}`,
@@ -142,6 +142,7 @@ module.exports = {
     const isNotSameNode = networkNodeUrl != coin.currentNodeUrl;
     const correctHash = lastBlock.hash === newBlock.previousBlockHash;
     const correctIndex = lastBlock["index"] + 1 === newBlock["index"];
+    // console.log(isNotSameNode);
     if (correctHash && correctIndex && isNotSameNode) {
       coin.chain.push(newBlock);
       coin.pendingTransactions = [];

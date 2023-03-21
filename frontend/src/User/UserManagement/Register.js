@@ -13,10 +13,22 @@ const Register = (props) => {
   const [backImage, setBackImage] = useState(null);
 
   const handleFrontImageChange = (e) => {
+    const file = e.target.files[0];
+    if (!file.type.match("image.*")) {
+      setAlert("Please select an image file (jpg, jpeg, png)");
+      console.log("Please select an image file (jpg, jpeg, png)");
+      e.target.value = "";
+    }
     setFrontImage(e.target.files[0]);
   };
 
   const handleBackImageChange = (e) => {
+    const file = e.target.files[0];
+    if (!file.type.match("image.*")) {
+      setAlert("Please select an image file (jpg, jpeg, png)");
+      console.log("Please select an image file (jpg, jpeg, png)");
+      e.target.value = "";
+    }
     setBackImage(e.target.files[0]);
   };
 
@@ -75,6 +87,7 @@ const Register = (props) => {
     setAddress("");
     setDob(new Date().toISOString(0, 10));
     setPassword("");
+    setCitizenshipId("");
     setFrontImage(null);
     setBackImage(null);
   };
@@ -128,8 +141,8 @@ const Register = (props) => {
           <input
             type="file"
             id="front-image"
-            accept="image/*"
             encType="multipart/form-data"
+            accept=".jpg,.jpeg,.png"
             onChange={handleFrontImageChange}
           />
           {frontImage && (
@@ -144,8 +157,8 @@ const Register = (props) => {
           <input
             type="file"
             id="back-image"
-            accept="image/*"
             encType="multipart/form-data"
+            accept=".jpg,.jpeg,.png"
             onChange={handleBackImageChange}
           />
           {backImage && (
