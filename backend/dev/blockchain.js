@@ -93,18 +93,17 @@ Blockchain.prototype.proofOfWork = function (
   return nonce;
 };
 //fing highest count blockchain
-Blockchain.prototype.findLongestChain = function (blockchains,maxChainLength) {
+Blockchain.prototype.findLongestChain = function (blockchains, maxChainLength) {
   let longestChains = [];
 
   const counts = {};
   blockchains.forEach((blockchain) => {
     const chainLength = blockchain.chain.length;
-    if (chainLength > maxChainLength) {
-      maxChainLength = chainLength;
-      longestChains = [blockchain];
-    } else if (chainLength === maxChainLength) {
+    if (chainLength === maxChainLength) {
       longestChains.push(blockchain);
     }
+  })
+  longestChains.forEach((blockchain) => {
 
     const hash = blockchain.chain[chainLength - 1].hash;
     counts[hash] = (counts[hash] || 0) + 1;
@@ -156,7 +155,6 @@ Blockchain.prototype.chainIsValid = function (blockchain) {
   }
 
   const genesisBlock = blockchain[0];
-  console.log(`${blockchain[0]}`)
   const correctNonce = genesisBlock["nonce"] === 100;
   const correctPreviousHash = genesisBlock["previousBlockHash"] === "0";
   const correctHash = genesisBlock["hash"] === "0";
