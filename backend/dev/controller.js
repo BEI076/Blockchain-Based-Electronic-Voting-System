@@ -40,6 +40,7 @@ module.exports = {
   transactionBroadcast: async (req, res) => {
     try {
       const lockPath = await acquireLock();
+      console.log(`lockPath = ${lockPath}`)
       // Perform critical section of code here
       transactionBroadcast(req.body, (error, results) => {
         if (error) {
