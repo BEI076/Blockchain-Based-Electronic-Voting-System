@@ -58,7 +58,7 @@ module.exports = {
   },
   releaseLock: async (lockPath) => {
     return new Promise((resolve, reject) => {
-      if (!zkClient || !zkClient.getState().name === 'SYNC_CONNECTED') {
+      if (!zkClient || !(zkClient.getState().name === 'SYNC_CONNECTED')) {
         return reject(new Error('ZooKeeper client not connected'));
       }
       zkClient.getChildren("/", false, (error, children) => {
