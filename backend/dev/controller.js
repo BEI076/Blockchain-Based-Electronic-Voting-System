@@ -54,7 +54,7 @@ module.exports = {
       });
       setTimeout(() => {
         releaseLock(lockPath);
-      }, 5000);
+      }, 4000);
       // res.status(200).json({ message: "Block added to blockchain" });
     } catch (error) {
       console.error("Error acquiring lock:", error);

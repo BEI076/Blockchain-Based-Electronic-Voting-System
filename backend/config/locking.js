@@ -1,83 +1,170 @@
 const zookeeper = require("node-zookeeper-client");
 const os = require("os");
-const zkClient = zookeeper.createClient("192.168.1.92:2181");
+
 const lockPath = "/blockchain-lock-" + os.hostname() + "-seq-";
-const barrierPath = "/blockchain-barrier";
 
-zkClient.connect();
-zkClient.once("connected", () => {
-  console.log("Connected to ZooKeeper ensemble");
-});
+let zkClient;
+const zkClientOptions = {
+  sessionTimeout: 30000,
+  spinDelay: 1000,
+  retries: 5
+};
 
-let lockSeq = null;
-let lockNodePath = null;
-
-const createLock = () => {
-  return new Promise((resolve, reject) => {
-    zkClient.create(
-      lockPath,
-      zookeeper.CreateMode.EPHEMERAL_SEQUENTIAL,
-      (error, path) => {
-        if (error) {
-          reject(error);
-        } else {
-          console.log("Acquired lock:", path);
-          lockNodePath = path;
-          lockSeq = parseInt(path.split("-")[3]);
-          zkClient.getChildren("/", false, (error, children) => {
-            if (error) {
-              console.error("Failed to get children:", error);
-              return;
-            }
-            const lockNodes = children.filter((child) =>
-              child.startsWith("blockchain-lock")
-            );
-            lockNodes.sort();
-            if (lockNodes.length === 1 || lockSeq === parseInt(lockNodes[0].split("-")[3])) {
-              resolve();
-            } else {
-              const previousLockNode = lockNodes.find(
-                (node) => parseInt(node.split("-")[3]) < lockSeq
-              );
-              if (previousLockNode) {
-                zkClient.exists(
-                  "/" + previousLockNode,
-                  (event) => {
-                    console.log("Lock state changed:", event);
-                    createLock();
-                  },
-                  (error, state) => {
-                    if (error) {
-                      console.error("Failed to set watch on lock node:", error);
-                      reject(error);
-                    } else {
-                      console.log("Watch set on lock node:", state);
-                    }
-                  }
-                );
-              }
-            }
-          });
-        }
-      }
-    );
+const connectZookeeper = () => {
+  zkClient = zookeeper.createClient("192.168.1.92:2181", zkClientOptions);
+  zkClient.connect();
+  zkClient.once("connected", () => {
+    console.log("Connected to ZooKeeper ensemble");
   });
 };
 
+connectZookeeper();
 module.exports = {
   acquireLock: async () => {
-    await createLock();
-    return lockNodePath;
-  },
-  releaseLock: async (lockNodePath) => {
-    zkClient.remove(lockNodePath, -1, (error, path) => {
-      if (error) {
-        console.error("Failed to release lock:", error);
-      } else {
-        console.log("Lock released:", path);
+    return new Promise((resolve, reject) => {
+      if (!zkClient || !zkClient.getState().name === 'SYNC_CONNECTED') {
+        return reject(new Error('ZooKeeper client not connected'));
       }
+      zkClient.create(
+        lockPath,
+        zookeeper.CreateMode.EPHEMERAL_SEQUENTIAL,
+        (error, path) => {
+          if (error) {
+            reject(error);
+          } else {
+            console.log("Acquired lock:", path);
+            zkClient.exists(
+              path,
+              (event) => {
+                if (event) {
+                  console.log("Lock state changed:", event);
+                } else {
+                  console.log("Lock node deleted");
+                }
+              },
+              (error, state) => {
+                if (error) {
+                  console.error("Failed to set watch on lock node:", error);
+                } else {
+                  console.log("Watch set on lock node:", state);
+                }
+              }
+            );
+            resolve(path);
+          }
+        }
+      );
     });
   },
+  releaseLock: async (lockPath) => {
+    return new Promise((resolve, reject) => {
+      if (!zkClient || !zkClient.getState().name === 'SYNC_CONNECTED') {
+        return reject(new Error('ZooKeeper client not connected'));
+      }
+      zkClient.getChildren("/", false, (error, children) => {
+        if (error) {
+          console.error("Failed to get children:", error);
+          return reject(error);
+        }
+        const lockNodes = children.filter((child) => child.startsWith("blockchain-lock"));
+        lockNodes.sort();
+        if (lockNodes.length > 0) {
+          const firstLockNode = lockNodes[0];
+          const lockNodePath = "/" + firstLockNode;
+          if (lockNodePath === lockPath) {
+            zkClient.remove(lockNodePath, -1, (error, path) => {
+              if (error) {
+                console.error("Failed to release lock:", error);
+                return reject(error);
+              } else {
+                console.log("Lock released:", path);
+                return resolve(path);
+              }
+            });
+          } else {
+            console.log(`Not releasing lock for path ${lockPath} as it is no longer the first lock node.`);
+            return resolve(null);
+          }
+        } else {
+          console.log(`No lock nodes found.`);
+          return resolve(null);
+        }
+      });
+    });
+  }
 
-};
+}
 
+// export const acquireLock = async () => {
+//   return new Promise((resolve, reject) => {
+//     if (!zkClient || !zkClient.getState().name === 'SYNC_CONNECTED') {
+//       return reject(new Error('ZooKeeper client not connected'));
+//     }
+//     zkClient.create(
+//       lockPath,
+//       zookeeper.CreateMode.EPHEMERAL_SEQUENTIAL,
+//       (error, path) => {
+//         if (error) {
+//           reject(error);
+//         } else {
+//           console.log("Acquired lock:", path);
+//           zkClient.exists(
+//             path,
+//             (event) => {
+//               if (event) {
+//                 console.log("Lock state changed:", event);
+//               } else {
+//                 console.log("Lock node deleted");
+//               }
+//             },
+//             (error, state) => {
+//               if (error) {
+//                 console.error("Failed to set watch on lock node:", error);
+//               } else {
+//                 console.log("Watch set on lock node:", state);
+//               }
+//             }
+//           );
+//           resolve(path);
+//         }
+//       }
+//     );
+//   });
+// };
+
+// export const releaseLock = async (lockPath) => {
+//   return new Promise((resolve, reject) => {
+//     if (!zkClient || !zkClient.getState().name === 'SYNC_CONNECTED') {
+//       return reject(new Error('ZooKeeper client not connected'));
+//     }
+//     zkClient.getChildren("/", false, (error, children) => {
+//       if (error) {
+//         console.error("Failed to get children:", error);
+//         return reject(error);
+//       }
+//       const lockNodes = children.filter((child) => child.startsWith("blockchain-lock"));
+//       lockNodes.sort();
+//       if (lockNodes.length > 0) {
+//         const firstLockNode = lockNodes[0];
+//         const lockNodePath = "/" + firstLockNode;
+//         if (lockNodePath === lockPath) {
+//           zkClient.remove(lockNodePath, -1, (error, path) => {
+//             if (error) {
+//               console.error("Failed to release lock:", error);
+//               return reject(error);
+//             } else {
+//               console.log("Lock released:", path);
+//               return resolve(path);
+//             }
+//           });
+//         } else {
+//           console.log(`Not releasing lock for path ${lockPath} as it is no longer the first lock node.`);
+//           return resolve(null);
+//         }
+//       } else {
+//         console.log(`No lock nodes found.`);
+//         return resolve(null);
+//       }
+//     });
+//   });
+// };
