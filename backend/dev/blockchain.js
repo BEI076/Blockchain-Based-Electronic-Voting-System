@@ -105,7 +105,7 @@ Blockchain.prototype.findLongestChain = function (blockchains, maxChainLength) {
   })
   longestChains.forEach((blockchain) => {
 
-    const hash = blockchain.chain[chainLength - 1].hash;
+    const hash = blockchain.chain[blockchain.chain.length - 1].hash;
     counts[hash] = (counts[hash] || 0) + 1;
   });
 
