@@ -1,108 +1,51 @@
-const pool = require("../../config/database");
-const multer = require("multer");
-const upload = multer({ dest: "public/uploads/" });
+const prisma = require("../../config/prismaClient");
 
 module.exports = {
-  storeRawSData: (data, callBack = () => {}) => {
-    const {
-      name,
-      address,
-      email,
-      password,
-      citizenshipId,
-      dob,
-      frontImage,
-      backImage,
-    } = data;
-
-    pool.query(
-      `INSERT INTO prevoter (      
-        name,
-        address,
-        email,
-        password,
-        citizenshipId,
-        dob,
-        frontImage,
-        backImage)
-      VALUES(?,?,?,?,?,?,?,?)`,
-      [
-        name,
-        address,
-        email,
-        password,
-        citizenshipId,
-        dob,
-        frontImage,
-        backImage,
-      ],
-      (error, results, fields) => {
-        if (error) {
-          return callBack(error);
-        }
-        return callBack(null, results);
-      }
-    );
+  storeRawSData: async (data, callBack = () => {}) => {
+    try {
+      const newPrevoter = await prisma.prevoter.create({
+        data: {
+          name: data.name,
+          address: data.address,
+          email: data.email,
+          password: data.password,
+          citizenshipid: data.citizenshipId,
+          dob: new Date(data.dob).toISOString(),
+          frontImage: data.frontImage,
+          backImage: data.backImage,
+        },
+      });
+      callBack(null, newPrevoter);
+    } catch (error) {
+      callBack(error);
+    }
   },
-  getRawData: (callBack = () => {}) => {
-    pool.query(
-      `SELECT *, CONCAT("/uploads/", frontImage) AS imageUrl1, CONCAT("/uploads/", backImage) AS imageUrl2 FROM prevoter`,
-      [],
-      (error, results) => {
-        if (error) {
-          return callBack(error);
-        }
-        return callBack(null, results);
-      }
-    );
+  getRawData: async (callBack = () => {}) => {
+    try {
+      const rawData = await prisma.prevoter.findMany();
+      const results = rawData.map((row) => ({
+        ...row,
+        imageUrl1: `/uploads/${row.frontImage}`,
+        imageUrl2: `/uploads/${row.backImage}`,
+      }));
+      callBack(null, results);
+    } catch (error) {
+      callBack(error);
+    }
   },
-  updateRawData: (v_id, callBack = () => {}) => {
-    // console.log(`data = ${v_id}`);
-    pool.query(
-      `UPDATE prevoter
-      SET flag = true
-      WHERE V_id = ?`,
-      [v_id],
-      (error, results) => {
-        if (error) {
-          return callBack(error);
-        }
-        return callBack(null, results);
-      }
-    );
+  updateRawData: async (v_id, callBack = () => {}) => {
+    try {
+      const results = await prisma.prevoter.updateMany({
+        where: {
+          v_id: v_id,
+        },
+        data: {
+          flag: true,
+        },
+      });
+      callBack(null, results);
+    } catch (error) {
+      callBack(error);
+    }
   },
 };
-
-// Get all images
-// app.get('/images', (req, res) => {
-//   // Retrieve all image data from database
-//   db.query('SELECT * FROM images', (err, results) => {
-//     if (err) throw err;
-
-//     // Send array of image filenames to client
-//     const filenames = results.map(result => result.filename);
-//     res.send(filenames);
-//   });
-// });
-
-// CREATE TABLE verifyvoter (
-// 	v_id INT NOT NULL AUTO_INCREMENT,
-// 	name VARCHAR(255) NOT NULL,
-// 	address VARCHAR(255) NOT NULL,
-// 	email VARCHAR(255) NOT NULL UNIQUE,
-// 	password VARCHAR(255) NOT NULL,
-// 	citizenshipid BIGINT NOT NULL,
-// 	dob DATE NOT NULL,
-// 	frontImage VARCHAR(255) NOT NULL,
-// 	backImage VARCHAR(255) NOT NULL,
-// 	PRIMARY KEY (v_id)
-// );
-
-// formData.append("name", name);
-// formData.append("address", address);
-// formData.append("email", email);
-// formData.append("password", password);
-// formData.append("citizenshipId", citizenshipId);
-// formData.append("dob", dob);
-// formData.append("frontImage", frontImage);
-// formData.append("backImage", backImage);

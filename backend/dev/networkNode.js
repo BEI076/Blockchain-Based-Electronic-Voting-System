@@ -8,7 +8,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 const { getFullCandidate } = require("../api/service/candidateService");
-const { CreateVote } = require("../api/service/voteService");
+const { createVote } = require("../api/service/voteService");
 //creating blockchain endpoint
 
 module.exports = {
@@ -282,7 +282,7 @@ module.exports = {
             candidate.category_name,
             candidate.party_name
           );
-          CreateVote(vote);
+          createVote(vote);
           // voteObject.push(
           //   coin.voteCount(
           //     candidate.name,

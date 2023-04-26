@@ -1,8 +1,8 @@
-const { CreateVote, DeleteVote, GetVote } = require("../service/voteService");
+const { createVote, deleteVote, getVote } = require("../service/voteService");
 
 module.exports = {
   CreateVote: (req, res) => {
-    CreateVote(req.body, (error, results) => {
+    createVote(req.body, (error, results) => {
       if (error) {
         console.log(error);
         return res.status(500).json({
@@ -17,7 +17,7 @@ module.exports = {
     });
   },
   DeleteVote: (req, res) => {
-    DeleteVote((error, results) => {
+    deleteVote((error, results) => {
       if (error) {
         console.log(error);
         return res.status(500).json({
@@ -32,7 +32,7 @@ module.exports = {
     });
   },
   GetVote: (req, res) => {
-    GetVote((error, results) => {
+    getVote((error, results) => {
       if (error) {
         console.log(error);
         return res.status(200).json({

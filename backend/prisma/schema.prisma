@@ -1,0 +1,80 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Admin {
+  a_id     Int    @id @default(autoincrement())
+  username String @unique
+  password String
+}
+
+model Party {
+  p_id      Int         @id @default(autoincrement())
+  name      String?
+  Candidate Candidate[]
+}
+
+model Category {
+  c_id      Int         @id @default(autoincrement())
+  name      String?
+  Candidate Candidate[]
+}
+
+model Candidate {
+  ca_id             Int      @id @default(autoincrement())
+  name              String
+  address           String
+  citizenshipid     String
+  dob               DateTime
+  c_id              Int
+  p_id              Int
+  candidate_address String
+  category          Category @relation(fields: [c_id], references: [c_id], onDelete: Cascade, onUpdate: Cascade)
+  party             Party    @relation(fields: [p_id], references: [p_id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@index([c_id], name: "c_id")
+  @@index([p_id], name: "p_id")
+}
+
+model Voter {
+  v_id          Int      @id @default(autoincrement())
+  name          String
+  address       String
+  email         String   @unique
+  citizenshipid String   @unique
+  dob           DateTime
+  password      String
+  voter_address String   @unique
+  voter_id      String   @unique
+  flag          Boolean  @default(false)
+}
+
+model Result {
+  r_id              Int     @id @default(autoincrement())
+  candidate_name    String?
+  candidate_address String?
+  party_name        String?
+  category_name     String?
+  votes             BigInt?
+}
+
+model Prevoter {
+  v_id          Int      @id @default(autoincrement())
+  name          String
+  address       String
+  email         String   @unique
+  citizenshipid String   @unique
+  dob           DateTime
+  password      String
+  frontImage    String
+  backImage     String
+  flag          Boolean  @default(false)
+}

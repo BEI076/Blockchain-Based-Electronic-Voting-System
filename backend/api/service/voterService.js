@@ -1,72 +1,62 @@
-const pool = require("../../config/database");
+const prisma = require("../../config/prismaClient");
 
 module.exports = {
-  createVoter: (data, callBack = () => {}) => {
-    pool.query(
-      `INSERT INTO Voter (name, address, email, citizenshipid, dob, password, voter_address,voter_id)
-      VALUES(?,?,?,?,?,?,?,?)`,
-      [
-        data.name,
-        data.address,
-        data.email,
-        data.citizenshipid,
-        data.dob,
-        data.password,
-        data.voter_address,
-        data.voter_id,
-      ],
-      (error, results, fields) => {
-        if (error) {
-          callBack(error);
-        }
-        return callBack(null, results);
-      }
-    );
+  createVoter: async (data, callBack = () => {}) => {
+    try {
+      const newVoter = await prisma.voter.create({
+        data: {
+          name: data.name,
+          address: data.address,
+          email: data.email,
+          citizenshipid: data.citizenshipid,
+          dob: new Date(data.dob).toISOString(),
+          password: data.password,
+          voter_address: data.voter_address,
+          voter_id: data.voter_id,
+        },
+      });
+      callBack(null, newVoter);
+    } catch (error) {
+      callBack(error);
+    }
   },
-  updateVoterByVoterAddress: (data, callBack = () => {}) => {
-    pool.query(
-      `UPDATE voter SET flag = true WHERE voter_address = ?`,
-      [data.voter_address],
-      (error, results, fields) => {
-        if (error) {
-          callBack(error);
-        }
-        return callBack(null, results[0]);
-      }
-    );
+  updateVoterByVoterAddress: async (data, callBack = () => {}) => {
+    try {
+      const updatedVoter = await prisma.voter.update({
+        where: { voter_address: data.voter_address },
+        data: { flag: true },
+      });
+      callBack(null, updatedVoter);
+    } catch (error) {
+      callBack(error);
+    }
   },
-
-  getVoterByEmail: (email, callBack = () => {}) => {
-    pool.query(
-      `SELECT * FROM voter WHERE email = ?`,
-      [email],
-      (error, results, fields) => {
-        if (error) {
-          callBack(error);
-        }
-        return callBack(null, results[0]);
-      }
-    );
+  getVoterByEmail: async (email, callBack = () => {}) => {
+    try {
+      const voter = await prisma.voter.findUnique({
+        where: { email: email },
+      });
+      callBack(null, voter);
+    } catch (error) {
+      callBack(error);
+    }
   },
-
-  getVoter: (callBack = () => {}) => {
-    pool.query(`SELECT * FROM voter`, [], (error, results, fields) => {
-      if (error) {
-        callBack(error);
-      }
-      return callBack(null, results);
-    });
+  getVoter: async (callBack = () => {}) => {
+    try {
+      const voters = await prisma.voter.findMany();
+      callBack(null, voters);
+    } catch (error) {
+      callBack(error);
+    }
   },
-  deleteVoter: (data, callBack) => {
-    pool.query(
-      `DELETE FROM voter WHERE v_id = ?`,
-      [data.v_id],
-      (error, results, fields) => {
-        if (error) {
-          callBack(error);
-        }
-        return callBack(null, results[0]);
-      }
-    );
+  deleteVoter: async (data, callBack) => {
+    try {
+      const deletedVoter = await prisma.voter.delete({
+        where: { v_id: data.v_id },
+      });
+      callBack(null, deletedVoter);
+    } catch (error) {
+      callBack(error);
+    }
   },
 };

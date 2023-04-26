@@ -1,49 +1,44 @@
-const pool = require("../../config/database");
+const prisma = require("../../config/prismaClient");
 
 module.exports = {
-  createCategory: (data, callBack = () => {}) => {
-    pool.query(
-      `INSERT INTO Category (name) VALUES(?)`,
-      [data.name],
-      (error, results, fields) => {
-        if (error) {
-          callBack(error);
-        }
-        return callBack(null, results);
-      }
-    );
+  createCategory: async (data, callBack = () => {}) => {
+    try {
+      const newCategory = await prisma.category.create({
+        data: {
+          name: data.name,
+        },
+      });
+      callBack(null, newCategory);
+    } catch (error) {
+      callBack(error);
+    }
   },
-  getCategoryById: (id, callBack = () => {}) => {
-    pool.query(
-      `SELECT * FROM category WHERE c_id = ?`,
-      [id],
-      (error, results, fields) => {
-        if (error) {
-          callBack(error);
-        }
-        return callBack(null, results[0]);
-      }
-    );
+  getCategoryById: async (id, callBack = () => {}) => {
+    try {
+      const category = await prisma.category.findUnique({
+        where: { c_id: id },
+      });
+      callBack(null, category);
+    } catch (error) {
+      callBack(error);
+    }
   },
-  getCategory: (callBack = () => {}) => {
-    pool.query(`SELECT * FROM category`, [], (error, results, fields) => {
-      if (error) {
-        callBack(error);
-      }
-      return callBack(null, results);
-    });
+  getCategory: async (callBack = () => {}) => {
+    try {
+      const categories = await prisma.category.findMany();
+      callBack(null, categories);
+    } catch (error) {
+      callBack(error);
+    }
   },
-  deleteCategory: (data, callBack) => {
-    console.log(`id = ${data.c_id}`);
-    pool.query(
-      `DELETE FROM category WHERE c_id = ?`,
-      [data.c_id],
-      (error, results, fields) => {
-        if (error) {
-          callBack(error);
-        }
-        return callBack(null, results[0]);
-      }
-    );
+  deleteCategory: async (data, callBack) => {
+    try {
+      const deletedCategory = await prisma.category.delete({
+        where: { c_id: data.c_id },
+      });
+      callBack(null, deletedCategory);
+    } catch (error) {
+      callBack(error);
+    }
   },
 };

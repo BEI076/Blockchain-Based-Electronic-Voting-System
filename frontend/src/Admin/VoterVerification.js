@@ -9,7 +9,7 @@ const VoterVerification = ({ token = "" }) => {
   useEffect(() => {
     const fetchData = async () => {
       const response = await getRawData(token);
-      setVoterIdData(response.data || []);
+      setVoterIdData(response || []);
     };
     fetchData();
   }, [shouldRefreshData, token]);
@@ -17,6 +17,8 @@ const VoterVerification = ({ token = "" }) => {
   const handleRefreshData = () => {
     setShouldRefreshData(!shouldRefreshData);
   };
+    console.log(`Raw Data =`, voterIdData);
+
 
   return (
     <div>
@@ -25,7 +27,7 @@ const VoterVerification = ({ token = "" }) => {
         voterIdData.map((data) => {
           const img1 = process.env.REACT_APP_API_URL + data.imageUrl1;
           const img2 = process.env.REACT_APP_API_URL + data.imageUrl2;
-          if (data.flag === 0) {
+          if (data.flag === false) {
             return (
               <RawVoter
                 key={data.v_id}

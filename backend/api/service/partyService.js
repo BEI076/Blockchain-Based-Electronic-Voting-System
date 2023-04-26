@@ -1,36 +1,34 @@
-const pool = require("../../config/database");
+const prisma = require("../../config/prismaClient");
 
 module.exports = {
-  createParty: (data, callBack = () => {}) => {
-    pool.query(
-      `INSERT INTO Party (name) VALUES(?)`,
-      [data.name],
-      (error, results, field) => {
-        if (error) {
-          callBack(error);
-        }
-        return callBack(null, results);
-      }
-    );
+  createParty: async (data, callBack = () => {}) => {
+    try {
+      const newParty = await prisma.party.create({
+        data: {
+          name: data.name,
+        },
+      });
+      callBack(null, newParty);
+    } catch (error) {
+      callBack(error);
+    }
   },
-  getParty: (callBack = () => {}) => {
-    pool.query(`SELECT * FROM party`, [], (error, results, field) => {
-      if (error) {
-        callBack(error);
-      }
-      return callBack(null, results);
-    });
+  getParty: async (callBack = () => {}) => {
+    try {
+      const parties = await prisma.party.findMany();
+      callBack(null, parties);
+    } catch (error) {
+      callBack(error);
+    }
   },
-  deletePartyById: (data, callBack = () => {}) => {
-    pool.query(
-      `DELETE FROM party WHERE p_id = ?`,
-      [data.p_id],
-      (error, results, field) => {
-        if (error) {
-          callBack(error);
-        }
-        return callBack(null, results[0]);
-      }
-    );
+  deletePartyById: async (data, callBack = () => {}) => {
+    try {
+      const deletedParty = await prisma.party.delete({
+        where: { p_id: data.p_id },
+      });
+      callBack(null, deletedParty);
+    } catch (error) {
+      callBack(error);
+    }
   },
 };

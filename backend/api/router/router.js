@@ -65,7 +65,7 @@ router.delete("/delete-category", adminCheckToken, deleteCategory);
 // router for candidate
 
 router.post("/create-candidate", adminCheckToken, createCandidate);
-router.get("/get-candidate", adminCheckToken, getCandidate);
+router.get("/get-candidate", getCandidate);
 router.get("/get-candidate-by-id/:id", adminCheckToken, getCandidateById);
 router.get(
   "/get-candidate-by-category/:category",
@@ -78,7 +78,7 @@ router.get("/get-full-candidate", adminCheckToken, getFullCandidate);
 // router for voter
 
 router.post("/create-voter", createVoter);
-router.get("/get-voter", adminCheckToken, userCheckToken, getVoter);
+router.get("/get-voter", getVoter);
 router.delete("/delete-voter", adminCheckToken, deleteVoter);
 router.post("/get-voter-by-email", getVoterByEmail);
 router.patch(
@@ -99,8 +99,8 @@ router.delete("/delete-party", adminCheckToken, deletePartyById);
 
 // admin
 router.post("/create-admin", createAdmin);
-router.delete("/delete-admin", adminCheckToken, deleteAdmin);
-router.get("/get-admin", adminCheckToken, getAdmin);
+router.delete("/delete-admin", deleteAdmin);
+router.get("/get-admin",  getAdmin);
 
 //admin login
 router.post("/admin-login", login);
@@ -110,7 +110,7 @@ router.post("/user-login", userLogin);
 
 // sote raw voter info
 router.post("/store-raw-voter", storeRawSData);
-router.get("/get-raw-data", adminCheckToken, getRawData);
+router.get("/get-raw-data", getRawData);
 router.patch("/update-raw-data", adminCheckToken, updateRawData);
 
 module.exports = router;

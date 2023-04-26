@@ -12,7 +12,7 @@ module.exports = {
   createVoter: (req, res) => {
     const salt = genSaltSync(10);
     req.body.voter_address = uuidv4().split("-").join(salt).split(".").join("");
-    req.body.voter_id = Math.floor(Math.random() * 900000) + 100000;
+    req.body.voter_id = String(Math.floor(Math.random() * 900000) + 100000);
     createVoter(req.body, (error, results) => {
       if (error) {
         console.log(error);

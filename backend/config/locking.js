@@ -7,7 +7,7 @@ let zkClient;
 const zkClientOptions = {
   sessionTimeout: 30000,
   spinDelay: 1000,
-  retries: 5
+  retries: 5,
 };
 
 const connectZookeeper = () => {
@@ -22,8 +22,8 @@ connectZookeeper();
 module.exports = {
   acquireLock: async () => {
     return new Promise((resolve, reject) => {
-      if (!zkClient || !zkClient.getState().name === 'SYNC_CONNECTED') {
-        return reject(new Error('ZooKeeper client not connected'));
+      if (!zkClient || !zkClient.getState().name === "SYNC_CONNECTED") {
+        return reject(new Error("ZooKeeper client not connected"));
       }
       zkClient.create(
         lockPath,
@@ -58,15 +58,17 @@ module.exports = {
   },
   releaseLock: async (lockPath) => {
     return new Promise((resolve, reject) => {
-      if (!zkClient || !(zkClient.getState().name === 'SYNC_CONNECTED')) {
-        return reject(new Error('ZooKeeper client not connected'));
+      if (!zkClient || !(zkClient.getState().name === "SYNC_CONNECTED")) {
+        return reject(new Error("ZooKeeper client not connected"));
       }
       zkClient.getChildren("/", false, (error, children) => {
         if (error) {
           console.error("Failed to get children:", error);
           return reject(error);
         }
-        const lockNodes = children.filter((child) => child.startsWith("blockchain-lock"));
+        const lockNodes = children.filter((child) =>
+          child.startsWith("blockchain-lock")
+        );
         lockNodes.sort();
         if (lockNodes.length > 0) {
           const firstLockNode = lockNodes[0];
@@ -82,7 +84,9 @@ module.exports = {
               }
             });
           } else {
-            console.log(`Not releasing lock for path ${lockPath} as it is no longer the first lock node.`);
+            console.log(
+              `Not releasing lock for path ${lockPath} as it is no longer the first lock node.`
+            );
             return resolve(null);
           }
         } else {
@@ -91,9 +95,8 @@ module.exports = {
         }
       });
     });
-  }
-
-}
+  },
+};
 
 // export const acquireLock = async () => {
 //   return new Promise((resolve, reject) => {

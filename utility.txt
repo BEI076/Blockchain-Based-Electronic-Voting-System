@@ -16,3 +16,12 @@ grant all  privileges on *.* to 'anil'@'%';
 flush privileges; 
 
 alter user 'anil'@'%' identified with mysql_native_password by 'anil@0403';
+
+
+
+Cluster: votedb
+YSQL Username: admin
+YSQL Password: fm-B92QrQ3oIGUGi8w_akAECRwWnRM
+YCQL Username: admin
+YCQL Password: fm-B92QrQ3oIGUGi8w_akAECRwWnRM
+

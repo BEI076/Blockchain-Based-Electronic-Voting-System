@@ -9,7 +9,6 @@ module.exports = {
   createAdmin: (req, res) => {
     const body = req.body;
     const salt = genSaltSync(10);
-
     body.password = hashSync(body.password, salt);
     console.log(body.password);
     createAdmin(body, (error, results) => {

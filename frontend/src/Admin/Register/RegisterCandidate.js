@@ -23,11 +23,9 @@ const RegisterCandidate = (props) => {
   useEffect(() => {
     getParty(token).then((response) => {
       setPartyData(response.data || []);
-
     });
     getCategory(token).then((response) => {
       setCategoryData(response.data || []);
-
     });
   }, [token, refreshData]);
 
@@ -37,9 +35,9 @@ const RegisterCandidate = (props) => {
       name,
       address,
       citizenshipId,
-      dob,
-      category,
-      party,
+      Date(dob),
+      Number(category),
+      Number(party),
       token
     ).then((response) => {
       setAlert(response.message);

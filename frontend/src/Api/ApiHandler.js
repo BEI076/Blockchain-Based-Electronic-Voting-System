@@ -454,14 +454,21 @@ export const getRawData = async (token) => {
     responseType: "json",
     headers: {
       Authorization: `Bearer ${token}`,
-      "Content-Type": "image/png",
+      "Content-Type": "application/json",
     },
   }).then((response) => {
-    console.log(response.data)
-    return response.data;
-
+    // console.log(`Raw Data =`, response.data.data);
+    // console.log(`Raw Data (stringified) = ${JSON.stringify(response.data)}`);
+    return response.data.data;
   });
 };
+
+
+
+
+
+
+
 
 export const updateRawData = async (v_id, token) => {
   return await axios({

@@ -74,7 +74,7 @@ const Register = (props) => {
     formData.append("email", email);
     formData.append("password", password);
     formData.append("citizenshipId", citizenshipId);
-    formData.append("dob", dob);
+    formData.append("dob", Date(dob));
     formData.append("frontImage", frontImage);
     formData.append("backImage", backImage);
 
