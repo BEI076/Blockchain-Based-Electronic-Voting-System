@@ -12,7 +12,6 @@ const {
   returnNodesUrl,
   broadcast,
 } = require("./networkNode");
-const { acquireLock, releaseLock } = require("../config/locking");
 
 module.exports = {
   getBlockchain: (req, res) => {
