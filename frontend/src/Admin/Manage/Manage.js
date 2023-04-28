@@ -4,6 +4,7 @@ import ManageParty from "./ManageParty";
 import ManageVoter from "./ManageVoter";
 
 import { countVote, deleteVote } from "../../Api/ApiHandler";
+import { resetVoter } from "../../Api/ApiHandler";
 
 const Manage = (props) => {
   const { token, loginState } = props;
@@ -19,17 +20,17 @@ const Manage = (props) => {
         sessionStorage.setItem("refreshData", Math.random());
       })
       .then(() => {
-        countVote(token)
-          .then((response) => {
-            console.log("Votes published");
-            sessionStorage.setItem("refreshData", Math.random());
-          });
+        countVote(token).then((response) => {
+          console.log("Votes published");
+          sessionStorage.setItem("refreshData", Math.random());
+        });
       });
   };
 
   const clear = (e) => {
-    deleteVote(token).then((response) => {
-      console.log("Votes cleared");
+    resetVoter(token).then((response) => {
+      console.log("Votes status cleared");
+      console.log(response.data);
       sessionStorage.setItem("refreshData", Math.random());
     });
   };

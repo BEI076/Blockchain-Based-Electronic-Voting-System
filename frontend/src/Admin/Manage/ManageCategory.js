@@ -28,8 +28,9 @@ const ManageCategory = ({ token }) => {
       </thead>
       <tbody>
         {categoryData.length > 0 &&
-          categoryData.map((item) => (
+          categoryData.map((item, i) => (
             <Category
+              sn={i}
               key={item.cat_id}
               token={token}
               refreshHandler={refreshHandler}

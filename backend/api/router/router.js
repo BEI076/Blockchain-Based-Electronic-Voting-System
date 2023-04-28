@@ -22,6 +22,7 @@ const {
   getVoterByEmail,
   deleteVoter,
   updateVoterByVoterAddress,
+  resetVoter,
 } = require("../controller/voterController");
 const {
   CreateVote,
@@ -55,6 +56,7 @@ const {
   updateRawData,
 } = require("../controller/rawVoterDataController");
 
+
 // router for category
 
 router.post("/create-category", adminCheckToken, createCategory);
@@ -81,6 +83,7 @@ router.post("/create-voter", createVoter);
 router.get("/get-voter", getVoter);
 router.delete("/delete-voter", adminCheckToken, deleteVoter);
 router.post("/get-voter-by-email", getVoterByEmail);
+router.patch("/reset-voter", resetVoter)
 router.patch(
   "/update-voter-by-voter-address",
   userCheckToken,
@@ -91,6 +94,7 @@ router.patch(
 router.post("/create-vote", CreateVote);
 router.delete("/delete-vote", DeleteVote);
 router.get("/get-vote", GetVote);
+
 
 // router for party
 router.post("/create-party", adminCheckToken, createParty);

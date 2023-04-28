@@ -36,8 +36,9 @@ const ManageVoter = (props) => {
       </thead>
       <tbody>
         {voterData.length > 0 &&
-          voterData.map((item) => (
+          voterData.map((item, i) => (
             <Voter
+              sn={i}
               key={item.id}
               item={item}
               token={token}

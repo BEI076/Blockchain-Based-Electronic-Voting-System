@@ -31,6 +31,16 @@ module.exports = {
       callBack(error);
     }
   },
+  resetVoter: async (callBack = () => {}) => {
+    try {
+      const updatedVoters = await prisma.voter.updateMany({
+        data: { flag: false },
+      });
+      callBack(null, updatedVoters);
+    } catch (error) {
+      callBack(error);
+    }
+  },
   getVoterByEmail: async (email, callBack = () => {}) => {
     try {
       const voter = await prisma.voter.findUnique({

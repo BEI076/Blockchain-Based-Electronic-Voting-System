@@ -14,7 +14,7 @@ const Candidate = (props) => {
 
   return (
     <tr key={item.ca_id}>
-      <td>{item.ca_id}</td>
+      <td>{props.sn + 1}</td>
       <td>{item.name}</td>
       <td>{item.address}</td>
       <td>{item.dob.substring(0, 10)}</td>

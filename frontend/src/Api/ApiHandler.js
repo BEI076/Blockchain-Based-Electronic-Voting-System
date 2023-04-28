@@ -316,6 +316,18 @@ export const updateVoterByVoterAddress = async (voter_address, token) => {
   });
 };
 
+export const resetVoter = async (token) => {
+  return await axios({
+    method: "PATCH",
+    url: baseurl + "/reset-voter",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }).then((response) => {
+    return response;
+  });
+};
+
 // delete voter
 export const deleteVoter = async (v_id, token) => {
   return await axios({
@@ -462,13 +474,6 @@ export const getRawData = async (token) => {
     return response.data.data;
   });
 };
-
-
-
-
-
-
-
 
 export const updateRawData = async (v_id, token) => {
   return await axios({

@@ -6,6 +6,7 @@ const {
   getVoter,
   deleteVoter,
   updateVoterByVoterAddress,
+  resetVoter,
 } = require("../service/voterService");
 
 module.exports = {
@@ -90,6 +91,19 @@ module.exports = {
       return res.json({
         success: 1,
         data: results,
+      });
+    });
+  },
+  resetVoter: (req, res) => {
+    console.log("called reset voter controller");
+    resetVoter((err, results) => {
+      if (err) {
+        console.log(err);
+        return;
+      }
+      return res.json({
+        success: 1,
+        message: "Cleared vote status",
       });
     });
   },

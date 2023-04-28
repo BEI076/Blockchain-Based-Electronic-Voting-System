@@ -32,8 +32,9 @@ const ManageCandidate = ({ token }) => {
       </thead>
       <tbody>
         {candidateData.length > 0 &&
-          candidateData.map((item) => (
+          candidateData.map((item, i) => (
             <Candidate
+              sn={i}
               key={item.ca_id}
               item={item}
               refreshHandler={refreshHandler}

@@ -30,8 +30,9 @@ const ManageParty = (props) => {
       </thead>
       <tbody>
         {parties.length > 0 &&
-          parties.map((party) => (
+          parties.map((party, i) => (
             <Party
+              sn={i}
               key={party.id}
               data={party}
               token={token}
